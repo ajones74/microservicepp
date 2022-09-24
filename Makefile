@@ -1,6 +1,6 @@
 TOPTARGETS := all clean
 
-SUBDIRS := src/
+SUBDIRS := src/ lib/
 
 $(TOPTARGETS): $(SUBDIRS)
 
