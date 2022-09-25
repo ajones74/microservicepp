@@ -1,8 +1,9 @@
-CXXFLAGS += -std=c++2a -02 -Wall 
+CXXFLAGS += -std=c++2a -O2 -Wall 
 
-SRCS := main.cpp mspp_base.cpp mspp_logging.cpp mspp_serial.cpp mspp_reactor.cpp mspp_config.cpp
+SRCS := main.cpp ../lib/mspp_base.cpp ../lib/mspp_logging.cpp ../lib/mspp_serial.cpp ../lib/mspp_reactor.cpp ../lib/mspp_config.cpp \
+		  ../lib/mspp_exceptions.cpp ../lib/mspp_manager.cpp
 
-LIBS := -lnng
+#LIBS := -lnng
 
 INCPATH := -I../include
 
@@ -11,11 +12,12 @@ BINARY = mspp_test
 all: $(BINARY)
 
 
-$(BINARY): main.cpp
+$(BINARY): $(SRCS)
 	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./mspp_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
-
+clean:
+	rm -f $(BINARY) mspp_version.h
 
 
 

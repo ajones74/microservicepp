@@ -3,15 +3,16 @@
 
 #include <string>
 
-enum class MSPP {
+namespace mspp {
+
+enum class service_type {
    ALL,
    CONFIGURATION,
    LOGGING,
-   APP_SERVICES,
+   APP_SERVICE,
    INVALID 
 };
 
-namespace mspp {
 
 class mspp_manager {
    public:
@@ -19,7 +20,7 @@ class mspp_manager {
       ~mspp_manager( );
       void manage_signals( );
       void configuration_source( const std::string &source_filename );
-      void start_service ( const int service_type );
+      void start_service ( const service_type type );
       void start_services ( ); 
       void run ( );
 
