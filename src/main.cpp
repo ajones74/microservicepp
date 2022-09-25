@@ -1,10 +1,14 @@
 #include <iostream>
 #include <mspp_manager.hpp>
+#include <mspp_exception.hpp>
+
 
 int main(int argc, char **argv) 
 {
    try {
       mspp::mspp_manager;
+
+      manager.manage_signals();
 
       manager.configuration_source("config.json");
 
