@@ -1,0 +1,12 @@
+<<<
+== Colophon
+This document was typeset using https://asciidoctor.org/[Asciidoctor].  A custom https://yaml.org/[YAML] 
+stylesheet is used that defines the document layout and fonts:
+
+* *HEADINGS:* https://fonts.google.com/specimen/Raleway[Raleway]
+
+* *Monospace:* http://mplus-fonts.osdn.jp/about-en.html[M+ MN Type-1]
+
+* *Paragraph:* https://fonts.google.com/specimen/EB+Garamond[EB Garamond]
+
+The git commit hash for this document revision is: *{gitbranch}:{gitversion}*
