@@ -1,11 +1,11 @@
 #include <iostream>
-
 #include <mspp_exceptions.hpp>
 
 namespace mspp {
-const char *mspp_startup_exception::what ( ) const noexcept override
-{
-   return "Manager startup/configuration error";
-}
 
+mspp_startup_exception::mspp_startup_exception( const std::string &what_msg )
+   : std::runtime_error( what_msg ) 
+{
+}
+   
 }

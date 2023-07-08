@@ -1,7 +1,7 @@
-CXXFLAGS += -std=c++2a -O2 -Wall 
+CXXFLAGS += -std=c++17 -O2 -Wall 
 
-SRCS := main.cpp ../lib/mspp_base.cpp ../lib/mspp_logging.cpp ../lib/mspp_serial.cpp ../lib/mspp_reactor.cpp ../lib/mspp_config.cpp \
-		  ../lib/mspp_exceptions.cpp ../lib/mspp_manager.cpp
+SRCS := main.cpp ../lib/mspp_base.cpp \
+		  ../lib/mspp_exceptions.cpp
 
 #LIBS := -lnng
 
