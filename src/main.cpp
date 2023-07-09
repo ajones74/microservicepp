@@ -22,7 +22,7 @@ int main(int argc, char **argv)
    {
       // Run in "limp home" mode -- helpful for debugging, 
       // remote assistance, operator-assisted recovery, etc.
-      mspp_manager failsafe_manager;
+      mspp::mspp_manager failsafe_manager;
       
       // This detaches the manager service and will immediately exit()
       failsafe_manager.run( e.what() );

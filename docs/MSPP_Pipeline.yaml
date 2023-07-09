@@ -1,0 +1,36 @@
+// -------------------
+// Use with the website, "yuml.me"
+// -------------------
+
+[SOURCE (Required); Serial Port
+IP socket
+file
+database
+etc {bg:green} ]->[Filter (Optional); Data denoising
+checksumming
+range-checking
+etc {bg:lightblue} ]->[Mapper (Optional); Data conversion
+reduction
+interpolation
+merging
+etc {bg:lightblue}]->[Framer (Optional); * Convert data into objects/messages/etc; *Reconstitute multi-part messages
+etc {bg:lightblue}]->[ELEMENT / SERVICE (Optional); * Data consumer/processor
+etc {bg:orange}]
+
+[Control; * User Interface; *Programmatic feedback, etc {bg:yellow}]->[ELEMENT / SERVICE (Optional)]   
+[Control]->[Framer (Optional)]   
+[Control]->[Mapper (Optional)]   
+[Control]->[Filter (Optional)]
+[Control]->[SOURCE (Required)]
+
+[ELEMENT / SERVICE (Optional)]->[PUBLISHER (Optional) {bg:firebrick}; * (1-n) "fanout" mux]
+
+[PUBLISHER (Optional) {bg:firebrick}]-> [SINK 1 (Required) {bg:firebrick}; * Logger/Debugger; * IP Socket; * file; * Serial Port, etc]
+
+[PUBLISHER (Optional) {bg:firebrick}]-> [SINK ... (Optional) {bg:firebrick}; * Logger/Debugger; * IP Socket; * file; * Serial Port, etc]
+
+[PUBLISHER (Optional) {bg:firebrick}]-> [SINK N (Optional) {bg:firebrick}; * Logger/Debugger; * IP Socket; * file; * Serial Port, etc]
+
+[note: The sink-side of the element can have Mappers, Framers, etc, too...]
+
+

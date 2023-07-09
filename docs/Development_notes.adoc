@@ -51,6 +51,13 @@ toc::[]
 [#intro]
 == Introduction
 
+. Services are ELEMENTS.
+. ELEMENTS are data SINKS or data SOURCES.
+. ADAPTERS are both data SINKS and data SOURCES.
+. PUBLISHERS support multiple data SOURCES.
+. SUBSCRIBERS support mulitple data SINKS.
+. QUEUES are ADAPTERS with unique support for buffering data.
+
 
 include::colophon.adoc[]
 
