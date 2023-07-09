@@ -5,32 +5,32 @@
 
 namespace mspp {
 
-mspp_manager::mspp_manager ( ) 
-{
-
-}
-
-mspp_manager::~mspp_manager ( )
+mspp_manager::~mspp_manager( )
 {
    
 }
 
-void mspp_manager::configuration_source ( const std::string &source_filename ) 
+bool mspp_manager::start_service( mspp_base &service  )
 {
-
+   return true;
 }
 
-void mspp_manager::start_service ( const service_type svc_type )
+bool mspp_manager::start_services( )
 {
-
+   return true;
 }
 
-void mspp_manager::start_services ( )
+bool mspp_manager::stop_service( mspp_base &service )
 {
-
+   return true;
 }
 
-void mspp_manager::run ( )
+bool mspp_manager::stop_services( )
+{
+   return true;
+}
+
+bool mspp_manager::run ( )
 {
 
 }

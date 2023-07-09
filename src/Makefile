@@ -1,7 +1,8 @@
 CXXFLAGS += -std=c++17 -O2 -Wall 
 
-SRCS := main.cpp ../lib/mspp_base.cpp \
-		  ../lib/mspp_exceptions.cpp
+SRCS := main.cpp \
+		  ../lib/mspp_exceptions.cpp \
+		  ../lib/mspp_pad.cpp
 
 #LIBS := -lnng
 

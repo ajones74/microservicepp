@@ -2,32 +2,27 @@
 #define _MSPP_MANAGER_HPP_
 
 #include <string>
+#include <mspp_base.hpp>
+#include <mspp_logger.hpp>
 
 namespace mspp {
+   class mspp_manager : public mspp_base {
+      public:
+         // NO default constructors.
+         mspp_manager( ) = delete;
+         explicit mspp_manager( const std::string src_uri, 
+                                mspp_logger &logger );
 
-enum class service_type {
-   ALL,
-   CONFIGURATION,
-   LOGGING,
-   APP_SERVICE,
-   INVALID 
-};
+         virtual ~mspp_manager( );
 
+         bool start_service ( mspp_base &service );
+         bool start_services( );
 
-class mspp_manager {
-   public:
-      mspp_manager( );
-      ~mspp_manager( );
-      void manage_signals( );
-      void configuration_source( const std::string &source_filename );
-      void start_service ( const service_type type );
-      void start_services ( ); 
-      void run ( );
+         bool stop_service( mspp_base &service );
+         bool stop_services( );
 
-   private:
-
-};
-
+         bool run( );
+   };
 }
 
 #endif // _MSPP_MANAGER_HPP_
