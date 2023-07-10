@@ -85,6 +85,39 @@ service:mspp:logging:sink:file:file:///opt/mspp/logging/log.txt
 service:mspp:logging:sink:socket:nng:localhost:5150
 ----
 
+== An example: The GPS service.
+
+=== The proposed service:
+
+. The GPS device is connected to a RPi via UART/RS-232 interface.
+. The GPS device has a PPS output signal -- connect it to the RPi GPIO interface.
+. The GPS device is NMEA XXX compliant -- but it has PROPRIETARY messages, TOO!
+- We want to FILTER away any non-standards-compliant messages -- our FIRST FILTER
+- We want to FILTER away any messages that have no TIME/DATA infromation -- our SECOND FILTER.
+
+.The (GPS SERVICE, DATA) pipeline will look something like:
+----
+
+[SRC]-->[QUEUE]-->[FRAMER]-->[Filter 1 (NMEA)]-->[Filter 2 (TIME/DATE)]--+  <1>
+                                                                         |
+ +-----------------------------------------------------------------------+                                                      |
+ +-->[QUEUE]-->[PUBLISH]
+----
+<1> SRC is UART/RS-232 interface.
+
+
+.The (GPS SERVICE, PPS) pipeline will look something like:
+----
+[SRC]-->[Filter 1 (DEBOUNCE)]--+
+[SRC]-->[
+                                                                         |
+ +-----------------------------------------------------------------------+                                                      |
+ +-->[QUEUE]-->[PUBLISH]
+----
+
+
+
+
 
 include::colophon.adoc[]
 
