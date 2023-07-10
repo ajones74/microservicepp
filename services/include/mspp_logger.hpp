@@ -12,9 +12,8 @@ namespace mspp {
         
         explicit mspp_logger( const std::string &src_uri );
 
-        bool add_source( mspp_pad &source);
-
         bool start_service( );
+        bool stop_service( );
 
     private:
 

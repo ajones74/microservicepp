@@ -1,12 +1,15 @@
 CXXFLAGS += -std=c++17 -O2 -Wall 
 
 SRCS := main.cpp \
-		  ../lib/mspp_exceptions.cpp \
-		  ../lib/mspp_pad.cpp
+		  ../services/lib/mspp_base.cpp \
+		  ../services/lib/mspp_exceptions.cpp \
+		  ../services/lib/mspp_logger.cpp \
+		  ../services/lib/mspp_manager.cpp \
+		  ../services/lib/mspp_pad.cpp
 
 #LIBS := -lnng
 
-INCPATH := -I../include
+INCPATH := -I../services/include
 
 BINARY = mspp_test
 

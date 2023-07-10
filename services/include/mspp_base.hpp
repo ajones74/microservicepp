@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <mspp_pad.hpp>
+#include <mspp_base_element.hpp>
 
 namespace mspp {
    class mspp_base {
@@ -16,17 +16,17 @@ namespace mspp {
          // To force derived classes to cleanup their messes...
          virtual ~mspp_base( ) = 0; 
 
-         virtual bool add_source( mspp_pad &source );
-         virtual bool add_sink( mspp_pad &sink ); 
+         virtual bool add_source_element( mspp_base_element &source );
+         virtual bool add_sink_element( mspp_base_element &sink ); 
          
-         virtual bool start( ) = 0;
-         virtual bool stop( ) = 0;
-         virtual bool initialize( ) = 0;
+         virtual bool start_service( ) = 0;
+         virtual bool stop_service( ) = 0;
+
 
       private:
          std::string m_descriptive_name;
-         std::vector<mspp_pad> m_sources;
-         std::vector<mspp_pad> m_sinks;
+         std::vector<mspp_base_element> m_sources;
+         std::vector<mspp_base_element> m_sinks;
    };
 }
 

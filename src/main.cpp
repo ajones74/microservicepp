@@ -1,22 +1,29 @@
 #include <iostream>
+#include <mspp_configuration.hpp>
 #include <mspp_exceptions.hpp>
+#include <mspp_logger.hpp>
 #include <mspp_manager.hpp>
 
 
-int main(int argc, char **argv) 
+int main(int argc, const char **argv) 
 {
    try 
    {
       using namespace mspp;
+
+      mspp_configuration configuration( argc, argv );
+      configuration.start_service( );
      
-      mspp_logger logger( "file:///opt/mspp/config/logger.json" );
+      //mspp_logger logger( "file:///opt/mspp/config/logger.json" );
+      mspp_logger logger( configuration.logger_config_file() );
       logger.start_service( );
 
-      mspp_manager manager( "file:///opt/mspp/config/manager.json", logger );
+      //mspp_manager manager( "file:///opt/mspp/config/manager.json", logger );
+      mspp_manager manager( configuration.manager_config_file(), logger );
       manager.start_services();
 
       // This detaches the manager service and will immediately exit()
-      manager.run();
+      manager.detach();
    } 
    catch ( const mspp::mspp_startup_exception &e ) 
    {

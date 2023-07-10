@@ -21,7 +21,7 @@ namespace mspp {
          bool stop_service( mspp_base &service );
          bool stop_services( );
 
-         bool run( );
+         void detach( );
    };
 }
 

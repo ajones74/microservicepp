@@ -36,9 +36,9 @@ namespace mspp {
        return true;
     }
 
-    bool mspp_manager::run ( )
+    void mspp_manager::detach( )
     {
-        return true;
+
     }
 }
 
