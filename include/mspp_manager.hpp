@@ -10,7 +10,7 @@ namespace mspp {
       public:
          // NO default constructors.
          mspp_manager( ) = delete;
-         explicit mspp_manager( const std::string src_uri, 
+         explicit mspp_manager( const std::string &src_uri, 
                                 mspp_logger &logger );
 
          virtual ~mspp_manager( );
