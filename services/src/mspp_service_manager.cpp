@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <mspp_manager.hpp>
+#include <mspp_service_manager.hpp>
 #include <mspp_exceptions.hpp>
 
 namespace mspp {

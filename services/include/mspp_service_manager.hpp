@@ -3,7 +3,7 @@
 
 #include <string>
 #include <mspp_base_service.hpp>
-#include <mspp_logger.hpp>
+#include <mspp_service_logger.hpp>
 
 namespace mspp {
    class mspp_manager : public mspp_base_service {

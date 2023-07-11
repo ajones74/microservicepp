@@ -1,8 +1,8 @@
 #include <iostream>
-#include <mspp_configuration.hpp>
+#include <mspp_service_configuration.hpp>
 #include <mspp_exceptions.hpp>
-#include <mspp_logger.hpp>
-#include <mspp_manager.hpp>
+#include <mspp_service_logger.hpp>
+#include <mspp_service_manager.hpp>
 
 
 int main(int argc, const char **argv) 

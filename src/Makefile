@@ -1,17 +1,18 @@
 CXXFLAGS += -std=c++17 -O2 -Wall 
 
 TEST_SRCS := main.cpp \
-		  ../lib/src/mspp_base_service.cpp \
-		  ../lib/src/mspp_base_element.cpp \
-		  ../lib/src/mspp_base_pad.cpp \
-		  ../services/src/mspp_configuration.cpp \
-		  ../services/src/mspp_exceptions.cpp \
-		  ../services/src/mspp_logger.cpp \
-		  ../services/src/mspp_manager.cpp
+		  ../base_classes/src/mspp_base_service.cpp \
+		  ../base_classes/src/mspp_base_element.cpp \
+		  ../base_classes/src/mspp_base_pad.cpp \
+		  ../lib/src/mspp_exceptions.cpp \
+		  ../services/src/mspp_service_configuration.cpp \
+		  ../services/src/mspp_service_logger.cpp \
+		  ../services/src/mspp_service_manager.cpp
 
 #LIBS := -lnng
 
-INCPATH := -I../lib/include \
+INCPATH := -I../base_classes/include \
+			-I../lib/include \
          -I../services/include \
 		   -I../elements/include \
 		   -I../pads/include

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <mspp_configuration.hpp>
+#include <mspp_service_configuration.hpp>
 
 namespace mspp {
 
