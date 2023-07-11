@@ -1,6 +1,6 @@
 CXXFLAGS += -std=c++17 -O2 -Wall 
 
-SRCS := main.cpp \
+TEST_SRCS := main.cpp \
 		  ../lib/src/mspp_base_service.cpp \
 		  ../lib/src/mspp_base_element.cpp \
 		  ../lib/src/mspp_base_pad.cpp \
@@ -17,14 +17,16 @@ INCPATH := -I../lib/include \
 		   -I../pads/include
 
 
-BINARY = mspp_test
+TEST_BIN = mspp_test
 
-all: $(BINARY)
+all: $(TEST_BIN) $(GPS_BIN) 
 
 
-$(BINARY): $(SRCS)
+$(TEST_BIN): $(TEST_SRCS)
 	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./mspp_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
+
+$(GPS_BIN): 
 
 clean:
 	rm -f $(BINARY) mspp_version.h
