@@ -2,11 +2,11 @@
 #define _MSPP_MANAGER_HPP_
 
 #include <string>
-#include <mspp_base.hpp>
+#include <mspp_base_element.hpp>
 #include <mspp_logger.hpp>
 
 namespace mspp {
-   class mspp_manager : public mspp_base {
+   class mspp_manager : public mspp_base_element {
       public:
          // NO default constructors.
          mspp_manager( ) = delete;

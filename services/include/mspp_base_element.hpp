@@ -6,7 +6,7 @@
 #include <mspp_base_element.hpp>
 
 namespace mspp {
-   class mspp_base {
+   class mspp_base_element {
       public:
          // NO default constructors!
          mspp_base( ) = delete;     

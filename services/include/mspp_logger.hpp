@@ -1,11 +1,11 @@
 #ifndef _MSPP_LOGGER_HPP_
 #define _MSPP_LOGGER_HPP_
 
-#include <mspp_base.hpp>
+#include <mspp_base_element.hpp>
 
 
 namespace mspp {
-    class mspp_logger : public mspp_base {
+    class mspp_logger : public mspp_base_element {
     public:
         // NO default ctor.
         mspp_logger( ) = delete;
