@@ -9,12 +9,14 @@ namespace mspp {
    class mspp_base_service {
       public:
          // NO default constructors!
-         mspp_base_service( ) = delete;     
+         //mspp_base_service( ) = delete;     
+         
          // EXPLICIT single-arg constructor
-         explicit mspp_base_service( const std::string name ) 
-            : m_descriptive_name{name} {};
+         //explicit mspp_base_service( const std::string name ) 
+         //   : m_descriptive_name{name} {};
+
          // To force derived classes to cleanup their messes...
-         virtual ~mspp_base_service( ) = 0; 
+         //virtual ~mspp_base_service( ) = 0; 
 
          virtual bool add_source_element( mspp_base_element &source );
          virtual bool add_sink_element( mspp_base_element &sink ); 
