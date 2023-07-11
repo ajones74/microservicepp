@@ -3,8 +3,10 @@
 
 namespace mspp {
 
-
-
+    class mspp_base_pad {
+        public:
+        private:
+    };
 }
 
 #endif // _MSPP_BASE_SOURCE_HPP_

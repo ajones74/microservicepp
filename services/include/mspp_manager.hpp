@@ -2,23 +2,26 @@
 #define _MSPP_MANAGER_HPP_
 
 #include <string>
-#include <mspp_base_element.hpp>
+#include <mspp_base_service.hpp>
 #include <mspp_logger.hpp>
 
 namespace mspp {
-   class mspp_manager : public mspp_base_element {
+   class mspp_manager : public mspp_base_service {
       public:
          // NO default constructors.
          mspp_manager( ) = delete;
+
          explicit mspp_manager( const std::string &src_uri, 
                                 mspp_logger &logger );
 
          virtual ~mspp_manager( );
 
-         bool start_service ( mspp_base &service );
+         bool start_service( ) override;
+         bool start_service ( mspp_base_service &service );
          bool start_services( );
 
-         bool stop_service( mspp_base &service );
+         bool stop_service( ) override;
+         bool stop_service( mspp_base_service &service );
          bool stop_services( );
 
          void detach( );

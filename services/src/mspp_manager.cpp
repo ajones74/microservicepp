@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include <mspp_base.hpp>
 #include <mspp_manager.hpp>
 #include <mspp_exceptions.hpp>
 
@@ -16,7 +15,12 @@ namespace mspp {
        
     }
 
-    bool mspp_manager::start_service( mspp_base &service  )
+    bool mspp_manager::start_service( )
+    {
+        return true;
+    }
+
+    bool mspp_manager::start_service( mspp_base_service &service  )
     {
        return true;
     }
@@ -26,7 +30,12 @@ namespace mspp {
        return true;
     }
 
-    bool mspp_manager::stop_service( mspp_base &service )
+    bool mspp_manager::stop_service( )
+    {
+        return true;
+    }
+
+    bool mspp_manager::stop_service( mspp_base_service &service )
     {
        return true;
     }

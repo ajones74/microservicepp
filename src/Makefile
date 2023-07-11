@@ -1,7 +1,7 @@
 CXXFLAGS += -std=c++17 -O2 -Wall 
 
 SRCS := main.cpp \
-		  ../services/src/mspp_base_element.cpp \
+		  ../services/src/mspp_base_service.cpp \
 		  ../services/src/mspp_configuration.cpp \
 		  ../services/src/mspp_exceptions.cpp \
 		  ../services/src/mspp_logger.cpp \

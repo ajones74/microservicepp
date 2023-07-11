@@ -23,4 +23,14 @@ namespace mspp {
     {
         return true;
     }
+
+    std::string mspp_configuration::logger_config_file( )
+    {
+        return std::string{""};
+    }
+
+    std::string mspp_configuration::manager_config_file( )
+    {
+        return std::string{""};
+    }
 }
