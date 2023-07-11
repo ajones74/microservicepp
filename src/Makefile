@@ -9,7 +9,8 @@ SRCS := main.cpp \
 
 #LIBS := -lnng
 
-INCPATH := -I../services/include \
+INCPATH := -I../lib/include \
+         -I../services/include \
 		   -I../elements/include \
 		   -I../pads/include
 
