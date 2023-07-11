@@ -10,6 +10,12 @@ namespace mspp {
        
     }
 
+    mspp_manager::mspp_manager( const std::string &src_uri,
+                                const std::string &exception_msg )
+    {
+
+    }
+
     mspp_manager::~mspp_manager( )
     {
        

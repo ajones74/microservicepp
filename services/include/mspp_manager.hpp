@@ -14,6 +14,8 @@ namespace mspp {
          explicit mspp_manager( const std::string &src_uri, 
                                 mspp_logger &logger );
 
+         explicit mspp_manager( const std::string &src_uri, 
+                                const std::string &exception_msg );
          virtual ~mspp_manager( );
 
          bool start_service( ) override;

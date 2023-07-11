@@ -7,11 +7,13 @@
 
 int main(int argc, const char **argv) 
 {
+
+   mspp::mspp_configuration configuration( argc, argv );
+
    try 
    {
       using namespace mspp;
 
-      mspp_configuration configuration( argc, argv );
       configuration.start_service( );
      
       //mspp_logger logger( "file:///opt/mspp/config/logger.json" );
@@ -29,11 +31,11 @@ int main(int argc, const char **argv)
    {
       // Run in "limp home" mode -- helpful for debugging, 
       // remote assistance, operator-assisted recovery, etc.
-      
-      //mspp::mspp_manager failsafe_manager;
-      
+      mspp::mspp_manager failsafe_manager( configuration.manager_config_file(), e.what() );
+     
+      failsafe_manager.start_services();
       // This detaches the manager service and will immediately exit()
-      //failsafe_manager.run( e.what() );
+      failsafe_manager.detach();
    } 
    catch ( const std::runtime_error &e ) 
    {
