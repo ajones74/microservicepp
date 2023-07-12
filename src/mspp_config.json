@@ -1,0 +1,9 @@
+{
+	"mspp_version": 1.0,
+	"enabled services": ["configuration", "logger", "manager", "gps", "imu"],
+	"configuration": {},
+	"logger": {},
+	"manager": {},
+	"gps": {},
+	"imu": {}
+}
