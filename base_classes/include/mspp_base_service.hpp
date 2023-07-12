@@ -18,8 +18,8 @@ namespace mspp {
          // To force derived classes to cleanup their messes...
          //virtual ~mspp_base_service( ) = 0; 
 
-         virtual bool add_source_element( mspp_base_element &source );
-         virtual bool add_sink_element( mspp_base_element &sink ); 
+         virtual bool add_source( mspp_base_element &source );
+         virtual bool add_sink( mspp_base_element &sink ); 
          
          virtual bool start_service( ) = 0;
          virtual bool stop_service( ) = 0;

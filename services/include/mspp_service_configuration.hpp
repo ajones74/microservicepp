@@ -19,9 +19,14 @@ namespace mspp {
             virtual bool start_service( );
             virtual bool stop_service( );
 
-            std::string logger_config_file( );
-            std::string manager_config_file( );
+            std::string logger_config_file( ) const;
+            std::string manager_config_file( ) const;
          private:
+            // The absolute path and filename of the JSON-formatted
+            // configuration file for the entire MSPP microservices framework.
+            std::string m_config_filename;
+            // The JSON-formatted 
+            std::
             // Valid URIS:
             // * "service:mspp:config:file:///opt/mspp/config/config.json"
             // * "service:mspp:config:odbc:Database=/opt/mspp/database/config.db;.."
@@ -30,6 +35,7 @@ namespace mspp {
             // 
             bool provided_config( const char *config_filename);
             bool default_config( ); 
+            bool parse_config_file( );
     };
 }
 

@@ -33,3 +33,6 @@
 
 src/mspp_version.h
 
+.cache/
+compile_commands.json
+

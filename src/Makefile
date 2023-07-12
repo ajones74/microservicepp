@@ -30,7 +30,7 @@ $(TEST_BIN): $(TEST_SRCS)
 $(GPS_BIN): 
 
 clean:
-	rm -f $(BINARY) mspp_version.h
+	rm -f $(TEST_BIN) mspp_version.h
 
 
 

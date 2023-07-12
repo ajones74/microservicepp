@@ -5,12 +5,12 @@
 
 
 namespace mspp {
-   bool mspp_base_service::add_source_element( mspp_base_element &source )
+   bool mspp_base_service::add_source( mspp_base_element &source )
    {
       return true;
    }
 
-   bool mspp_base_service::add_sink_element( mspp_base_element &sink )
+   bool mspp_base_service::add_sink( mspp_base_element &sink )
    {
       return true;
    }
