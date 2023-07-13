@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <iostream>
 
 #include <mspp_service_configuration.hpp>
@@ -11,24 +12,19 @@ namespace mspp {
    {
       if ( argc == 1 )
       {
-         // No path to a config-file provided. Go with a default in the CWD:
-         if ( not default_config( ) )
-         {
-            throw mspp_startup_exception( "Invalid invocation -- too few command-line options." );
-         }
+         // Too few arguments provided. Simply bail.
+         throw mspp_startup_exception( "Invalid invocation -- too few command-line options." );
       }
       else if ( argc == 2 )
       {
-         if ( not provided_config( argv[1] ) )
-         {
-            throw mspp_startup_exception( "Invalid invocation -- invalid command-line options." );
-         }
+         set_config_filename( argv[1] );
       }
       else
       {
          // Too many arguments provided. Simply bail. This could be a hack attempt.
          throw mspp_startup_exception( "Invalid invocation -- too many command-line options." );
       }
+      parse_config_file( );
    }
 
    mspp_configuration::~mspp_configuration( ) 
@@ -56,26 +52,19 @@ namespace mspp {
       return std::string{""};
    }
 
-   bool mspp_configuration::provided_config( const char *config_filename )
+   void mspp_configuration::set_config_filename( const char *config_filename = nullptr )
    {
-      if ( not config_filename )
+      if ( config_filename == nullptr )
       {
-         throw mspp_startup_exception( "NULL filename for configuration" );
+         throw mspp_startup_exception( "Invalid invocation." );
       }
       m_config_filename = std::string{ config_filename };
-      return parse_config_file();
-   }
-
-   // Use a default config file, "./mspp_config.json"
-   bool mspp_configuration::default_config( )
-   {
-      m_config_filename = std::string{"./mspp_config.json"};
-      return parse_config_file();
+      return true;
    }
 
     // THIS: "service:mspp:configuration:source:JSON:file://./mspp_config.json" 
     // OR:   "service:mspp:configuration:source:JSON:file://<CUSTOM-PATH-FILENAME>" 
-   bool mspp_configuration::parse_config_file( )
+   void mspp_configuration::parse_config_file( )
    {
       mspp_base_pad &file = new mspp_pad_file{ m_config_filename };
       mspp_base_element &json = new mspp_element_framer_JSON{ file };
