@@ -1,6 +1,8 @@
 #include <cstddef>
 #include <iostream>
 
+#include <nlohmann/json.hpp>
+
 #include <mspp_service_configuration.hpp>
 #include <mspp_exceptions.hpp>
 
@@ -52,27 +54,25 @@ namespace mspp {
       return std::string{""};
    }
 
-   void mspp_configuration::set_config_filename( const char *config_filename = nullptr )
+   void mspp_configuration::set_config_filename( const char *config_filename )
    {
       if ( config_filename == nullptr )
       {
          throw mspp_startup_exception( "Invalid invocation." );
       }
       m_config_filename = std::string{ config_filename };
-      return true;
    }
 
     // THIS: "service:mspp:configuration:source:JSON:file://./mspp_config.json" 
     // OR:   "service:mspp:configuration:source:JSON:file://<CUSTOM-PATH-FILENAME>" 
    void mspp_configuration::parse_config_file( )
    {
-      mspp_base_pad &file = new mspp_pad_file{ m_config_filename };
-      mspp_base_element &json = new mspp_element_framer_JSON{ file };
+      //mspp_base_pad &file = new mspp_pad_file{ m_config_filename };
+      //mspp_base_element &json = new mspp_element_framer_JSON{ file };
 
-      this.add_source( json );
+      this->add_source( json );
 
       // define "m_config_json" to whatever JSON library we are going to use...
       m_config_json = source.json.file.read_all( );
-      return true;
    }
 }

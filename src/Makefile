@@ -11,7 +11,8 @@ TEST_SRCS := main.cpp \
 
 #LIBS := -lnng
 
-INCPATH := -I../base_classes/include \
+INCPATH := -I../json/single_include \
+         -I../base_classes/include \
 			-I../lib/include \
          -I../services/include \
 		   -I../elements/include \
