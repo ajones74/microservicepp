@@ -1,3 +1,6 @@
 [submodule "json"]
 	path = json
 	url = git@github.com:nlohmann/json.git
+[submodule "audria"]
+	path = audria
+	url = git@github.com:scaidermern/audria.git
