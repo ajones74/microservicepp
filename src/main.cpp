@@ -1,21 +1,95 @@
 #include <iostream>
-#include <mspp_service_configuration.hpp>
-#include <mspp_exceptions.hpp>
-#include <mspp_service_logger.hpp>
-#include <mspp_service_manager.hpp>
+
+/* 
+{
+  	"service": "GPS",
+  	"config": {
+  		"logging": 3,
+  		"start": "WAITING"
+  	},
+  	"pipelines": [{
+  			"pipeline": "SOURCE",
+  			"sections": [{
+  					"pump": "serial?device=/dev/ttymxc4,baud=115200,parity=none,databits=8,stopbits=1,flow=none"
+  				},
+  				{
+  					"frame": "NMEA 0183"
+  				},
+  				{
+  					"filter": "NMEA 0138?ALLOW=$GPGGA,ALLOW=$GPMRC"
+  				},
+  				{
+  					"decimate": 1.00
+  				}
+  			]
+  		},
+  		{
+  			"pipeline": "DEBUG",
+  			"sections": [{
+  					"pump": "serial?device=/dev/ttymxc4,baud=115200,parity=none,databits=8,stopbits=1,flow=none"
+  				},
+  				{
+  					"frame": "NMEA 0183"
+  				},
+  				{
+  					"pool": "file?file=/opt/tm/logging/gps.txt"
+  				}
+  			]
+  		},
+      {
+         "pipeline": "SINK",
+         "sections" : [ {
+               "pool": "nng?
+            }
+         ]
+      }
+  	]
+}
+*/
+
+#include <services/pipe.hpp>
 
 
 int main(int argc, const char **argv) 
 {
 
-   mspp::mspp_configuration configuration( argc, argv );
-
    try 
    {
       using namespace mspp;
 
-      configuration.start_service( );
-     
+      // Connect a pipe to the LOGGING service.
+      Pipeline logging_pipe = Pipeline( "service:logging" );
+
+      // Connect a pipe to the CONFIG service, 
+      // fetch the configuration in a JSON structured document 
+      Pipeline config_pipe = Pipeline( "service:configuration?format=JSON" );
+
+      // Pull one ojject (A JSON doc) from the pipeline
+      json config_json = config_pipe.pull();
+
+
+      Service GPS_service = Service( "service:GPS" );
+
+
+      GPS_service.connect_pipe( logging_pipe );
+      GPS_service.connect_pipe( config_pipe );
+      GPS_service.make_pipe( config_json, "GPS/SOURCE" );
+      GPS_service.make_pipe( config_json, "GPS/DEBUG" );
+      GPS_service.make_pipe( config_json, "GPS/SINK" );
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
       //mspp_logger logger( "file:///opt/mspp/config/logger.json" );
       mspp_logger logger( configuration.logger_config_file() );
       logger.start_service( );
