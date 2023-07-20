@@ -78,12 +78,17 @@ The interconnect between services uses NNG (Nanomesg, Next-Generation).
 .. A prototype SLP URI would look like:
 
 ----
-service:mspp:logging:sink:file:file:///opt/mspp/logging/log.txt
+service:logging              <1>
 ----
+<1> This URI is used to locate and connect to the logging microservice.
 
 ----
-service:mspp:logging:sink:socket:nng:localhost:5150
+service:configuration?format=JSON  <1><2>
 ----
+<1> This URI connects to the configuration microservice and requests the format in JSON.
+<2> How's it going to add converters? Mux the converters at the end of the pipeline? 
+
+
 
 == An example: The GPS service.
 
@@ -91,28 +96,23 @@ service:mspp:logging:sink:socket:nng:localhost:5150
 
 . The GPS device is connected to a RPi via UART/RS-232 interface.
 . The GPS device has a PPS output signal -- connect it to the RPi GPIO interface.
-. The GPS device is NMEA XXX compliant -- but it has PROPRIETARY messages, TOO!
+. The GPS device is NMEA 0183 compliant -- but it has PROPRIETARY messages, TOO!
 - We want to FILTER away any non-standards-compliant messages -- our FIRST FILTER
 - We want to FILTER away any messages that have no TIME/DATA infromation -- our SECOND FILTER.
 
 .The (GPS SERVICE, DATA) pipeline will look something like:
 ----
-
-[SRC]-->[QUEUE]-->[FRAMER]-->[Filter 1 (NMEA)]-->[Filter 2 (TIME/DATE)]--+  <1>
-                                                                         |
- +-----------------------------------------------------------------------+                                                      |
- +-->[QUEUE]-->[PUBLISH]
+[SRC]-->[QUEUE]-->[NMEA 0183 FRAMER]-->[Filter 1 (NMEA 0183 standards)] -+   <1>
++------------------------------------------------------------------------+
++->[Filter 2 (TIME/DATE)]-->[NNG:PUBLISH]
 ----
-<1> SRC is UART/RS-232 interface.
+<1> SRC is UART/RS-232 interface. QUEUE is optional. 
 
 
 .The (GPS SERVICE, PPS) pipeline will look something like:
 ----
 [SRC]-->[Filter 1 (DEBOUNCE)]--+
-[SRC]-->[
-                                                                         |
- +-----------------------------------------------------------------------+                                                      |
- +-->[QUEUE]-->[PUBLISH]
+[SRC]-->
 ----
 
 

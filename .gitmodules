@@ -4,3 +4,6 @@
 [submodule "audria"]
 	path = audria
 	url = git@github.com:scaidermern/audria.git
+[submodule "nng"]
+	path = nng
+	url = git@github.com:nanomsg/nng.git
