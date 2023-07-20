@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>
+#include <string>
+
+#include <cstring>
 
 /* 
 {
@@ -47,78 +51,100 @@
 }
 */
 
-#include <services/pipe.hpp>
+#include <nlohmann/json.hpp>
+
+#include <nng/nng.h>
+#include <nng/protocol/pipeline0/push.h>
+
+void example_of_using_nng( )
+{
+      nng_socket sock;
+      int rv;
+      char msg[2];
+
+      std::cout << "PRE - Open the socket." << std::endl;
+      if ((rv = nng_push0_open(&sock)) != 0) 
+      {
+         std::cout << "nng_push0_open" << rv ;
+      }
+      std::cout << "POST - Open the socket." << std::endl;
+  
+
+      std::cout << "PRE - DIAL the socket." << std::endl;
+      if ((rv = nng_dial(sock, "...", NULL, 0)) != 0) 
+      {
+         std::cout << "nng_dial error(" << rv  << ")" << std::endl;
+      }
+      std::cout << "POST - DIAL the socket." << std::endl;
+
+      // Interesting ... by default, nng_send(...) is a BLOCKING call!
+      std::cout << "PRE - SEND the socket." << std::endl;
+      if ((rv = nng_send(sock, msg, strlen(msg)+1, 0)) != 0)
+      {
+         std::cout << "nng_dial" << rv ;
+      }
+      std::cout << "POST - SEND the socket." << std::endl;
+}
+
 
 
 int main(int argc, const char **argv) 
 {
-
    try 
    {
       using namespace mspp;
+      using json = nlohmann::json;
 
-      // Connect a pipe to the LOGGING service.
+      // Connect a pipe to the LOGGING service. 
+      // Pass it as the second arg to the service constructor
       Pipeline logging_pipe = Pipeline( "service:logging" );
 
       // Connect a pipe to the CONFIG service, 
-      // fetch the configuration in a JSON structured document 
-      Pipeline config_pipe = Pipeline( "service:configuration?format=JSON" );
+      // Pass it as the third arg to the service constructor
+      Pipeline config_pipe = Pipeline( "service:configuration" );
 
-      // Pull one ojject (A JSON doc) from the pipeline
-      json config_json = config_pipe.pull();
+      // Pull a copy of the system-wide configuration from the 
+      // configuration service as a JSON-structured document.
+      json config_json = config_pipe.pull( "format=JSON" );
 
+      // Create our service...
+      Service GPS_service = Service( "service:GPS", 
+                                     logging_pipe, 
+                                     config_pipe );
+      GPS_service.set_configuration( config_json );
 
-      Service GPS_service = Service( "service:GPS" );
+      // Find the description of the pipe in the confg_json object
+      GPS_service.make_pipe( "GPS/SOURCE" );
+      // Find the description of the pipe in the confg_json object
+      GPS_service.make_pipe( "GPS/DEBUG" );
+      // Find the description of the pipe in the confg_json object
+      GPS_service.make_pipe( "GPS/SINK" );
 
+      // Link the pipes meant for production
+      GPS_service.link_pipes( "GPS/SOURCE", "GPS/SINK");
+      // Link the pipes meant for debug/trace
+      GPS_service.link_pipes( "GPS/DEBUG", logging_pipe );
 
-      GPS_service.connect_pipe( logging_pipe );
-      GPS_service.connect_pipe( config_pipe );
-      GPS_service.make_pipe( config_json, "GPS/SOURCE" );
-      GPS_service.make_pipe( config_json, "GPS/DEBUG" );
-      GPS_service.make_pipe( config_json, "GPS/SINK" );
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-      //mspp_logger logger( "file:///opt/mspp/config/logger.json" );
-      mspp_logger logger( configuration.logger_config_file() );
-      logger.start_service( );
-
-      //mspp_manager manager( "file:///opt/mspp/config/manager.json", logger );
-      mspp_manager manager( configuration.manager_config_file(), logger );
-      manager.start_services();
-
-      // This detaches the manager service and will immediately exit()
-      manager.detach();
+      // This function never returns unless SIGKILL/SIGTERM/SIGABRT recv'd      
+      GPS_service.run( );
    } 
    catch ( const mspp::mspp_startup_exception &e ) 
    {
-      // Run in "limp home" mode -- helpful for debugging, 
-      // remote assistance, operator-assisted recovery, etc.
-      mspp::mspp_manager failsafe_manager( configuration.manager_config_file(), e.what() );
-     
-      failsafe_manager.start_services();
-      // This detaches the manager service and will immediately exit()
-      failsafe_manager.detach();
+      std::cout << "STARTUP ERROR(" << e.what() << ")" << std::endl;
    } 
    catch ( const std::runtime_error &e ) 
    {
-      
+      std::cout << "RUNTIME ERROR(" << e.what() << ")" << std::endl;
    } 
    catch ( const std::logic_error &e ) 
    {
-
+      std::cout << "LOGIC ERROR(" << e.what() << ")" << std::endl;
+   }
+   catch ( ... )
+   {
+      std::cout << "UNHANDLED ERROR(" <<  ")" << std::endl;
    }
 
+   std::cout << "EXITING" << std::endl;
    return 0; 
 }
