@@ -1,7 +1,7 @@
 CXXFLAGS += -std=c++17 -O2 -Wall 
 
 TEST_SRCS := main.cpp \
-		  ../lib/src/mspp_exceptions.cpp \
+		  ../exceptions/src/mspp_exceptions.cpp \
 
 LIBPATH := -L../nng/build/
 LIBS := -lpthread -lnng
@@ -9,7 +9,7 @@ LIBS := -lpthread -lnng
 INCPATH := -I../json/single_include \
 			  -I../nng/include/ \
          -I../base_classes/include \
-			-I../lib/include \
+			-I../exceptions/include \
          -I../services/include \
 		   -I../elements/include \
 		   -I../pads/include

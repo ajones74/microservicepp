@@ -56,6 +56,9 @@
 #include <nng/nng.h>
 #include <nng/protocol/pipeline0/push.h>
 
+#include <mspp_exceptions.hpp>
+
+
 void example_of_using_nng( )
 {
       nng_socket sock;
