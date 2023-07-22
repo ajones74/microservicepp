@@ -1,6 +1,6 @@
 CXXFLAGS += -std=c++17 -O2 -Wall 
 
-TEST_SRCS := main.cpp \
+GPS_SRCS := gps_service.cpp \
 		  ../exceptions/src/mspp_exceptions.cpp \
 
 LIBPATH := -L../nng/build/
@@ -11,23 +11,33 @@ INCPATH := -I../json/single_include \
          -I../base_classes/include \
 			-I../exceptions/include \
          -I../services/include \
-		   -I../elements/include \
-		   -I../pads/include
+		   -I../sections/include \
+		   -I../pools/include \
+		   -I../pumps/include
+
+GPS_BIN = gps_service
+LOGGING_BIN = logging_service
+CONFIG_BIN = configuration_service
 
 
-TEST_BIN = mspp_test
-
-all: $(TEST_BIN) $(GPS_BIN) 
+all: $(GPS_BIN) 
 
 
-$(TEST_BIN): $(TEST_SRCS)
-	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./mspp_version.h
+$(GPS_BIN): $(GPS_SRCS)
+	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./gps_service_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
-$(GPS_BIN): 
+$(CONFIG_BIN): $(CONFIG_SRCS)
+	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./configuration_service_version.h
+	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
+
+$(LOGGING_BIN): $(LOGGING_SRCS)
+	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./logging_service_version.h
+	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
 clean:
-	rm -f $(TEST_BIN) mspp_version.h
+	rm -f $(GPS_BIN) $(CONFIG_BIN) $(LOGGING_BIN) *_service_version.h
+
 
 
 
