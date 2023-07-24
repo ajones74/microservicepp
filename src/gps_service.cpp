@@ -52,7 +52,6 @@
 */
 
 #include <nlohmann/json.hpp>
-
 #include <nng/nng.h>
 #include <nng/protocol/pipeline0/push.h>
 
@@ -93,6 +92,8 @@ void example_of_using_nng( )
 
 int main(int argc, const char **argv) 
 {
+   int exit_value = EXIT_SUCCESS;
+
    try 
    {
       using namespace mspp;
@@ -101,10 +102,16 @@ int main(int argc, const char **argv)
       // Connect a pipe to the LOGGING service. 
       // Pass it as the second arg to the service constructor
       Pipeline logging_pipe = Pipeline( "service:logging" );
+      
+      // this will throw an exception on failure to connect.
+      logging_pipe.connect();
 
       // Connect a pipe to the CONFIG service, 
       // Pass it as the third arg to the service constructor
       Pipeline config_pipe = Pipeline( "service:configuration" );
+     
+      // this will throw an exception on failure to connect.
+      config_pipe.connect()
 
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
@@ -116,11 +123,9 @@ int main(int argc, const char **argv)
                                      config_pipe );
       GPS_service.set_configuration( config_json );
 
-      // Find the description of the pipe in the confg_json object
+      // Find the description of the pipeline(s) in the confg_json object
       GPS_service.make_pipe( "GPS/SOURCE" );
-      // Find the description of the pipe in the confg_json object
       GPS_service.make_pipe( "GPS/DEBUG" );
-      // Find the description of the pipe in the confg_json object
       GPS_service.make_pipe( "GPS/SINK" );
 
       // Link the pipes meant for production
@@ -134,20 +139,23 @@ int main(int argc, const char **argv)
    catch ( const mspp::mspp_startup_exception &e ) 
    {
       std::cout << "STARTUP ERROR(" << e.what() << ")" << std::endl;
+      exit_value = EXIT_FAILURE;
    } 
    catch ( const std::runtime_error &e ) 
    {
       std::cout << "RUNTIME ERROR(" << e.what() << ")" << std::endl;
+      exit_value = EXIT_FAILURE;
    } 
    catch ( const std::logic_error &e ) 
    {
       std::cout << "LOGIC ERROR(" << e.what() << ")" << std::endl;
+      exit_value = EXIT_FAILURE;
    }
    catch ( ... )
    {
       std::cout << "UNHANDLED ERROR(" <<  ")" << std::endl;
+      exit_value = EXIT_FAILURE;
    }
-
    std::cout << "EXITING" << std::endl;
-   return 0; 
+   return exit_value; 
 }
