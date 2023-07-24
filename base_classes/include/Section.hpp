@@ -1,9 +1,9 @@
 #ifndef _SECTION_HPP_
-#define _SERVICE_HPP_
+#define _SECTION_HPP_
 
 namespace mspp {
 
-class Service {
+class Section {
    public:
 
    private: 

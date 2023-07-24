@@ -2,6 +2,12 @@ CXXFLAGS += -std=c++17 -O2 -Wall
 
 GPS_SRCS := gps_service.cpp \
 		  ../exceptions/src/mspp_exceptions.cpp \
+		  ../base_classes/src/Pool.cpp \
+		  ../base_classes/src/Pipeline.cpp \
+		  ../base_classes/src/Pump.cpp \
+		  ../base_classes/src/Service.cpp \
+		  ../base_classes/src/Section.cpp
+
 
 LIBPATH := -L../nng/build/
 LIBS := -lpthread -lnng

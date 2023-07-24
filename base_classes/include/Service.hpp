@@ -29,6 +29,7 @@ class Service {
       void link_pipes( Pipeline &from,
                        Pipeline &to );
       void run( );
+
    private:
       std::string m_service_name;
       Pipeline m_logging_pipeline;

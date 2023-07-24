@@ -6,13 +6,14 @@
 
 #include <Section.hpp>
 
+
 namespace mspp {
 
 class Pipeline {
    public:
       Pipeline( ) = delete;
       Pipeline( const std::string &pipeline_string );
-      virtual void connect( ); 
+      void connect( ); 
       std::string pull( const std::string &format );
 
    private:

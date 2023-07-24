@@ -1,41 +1,41 @@
 #include <iostream>
 
 #include <Service.hpp>
+#include <Pipeline.hpp>
+#include <nlohmann/json.hpp>
 
 namespace mspp {
-   void Pipeline::set_configuration( const json &config_json )
+   void Service::set_configuration( const json &config_json )
    {
 
    }
 
-   void Pipeline::make_pipe( const std::string &pipe_label )
+   void Service::make_pipe( const std::string &pipe_label )
    {
 
    }
 
-   void Pipeline::link_pipes( const std::string &from,
+   void Service::link_pipes( const std::string &from,
                               const std::string &to )
    {
 
    }
 
-   void Pipeline::link_pipes( const std::string &from,
-                              Pipeline &to )
+   void Service::link_pipes( const std::string &from,
+                             Pipeline &to )
    {
 
    }
 
-   void Pipeline::link_pipes( Pipeline &from,
-                              Pipeline &to )
+   void Service::link_pipes( Pipeline &from,
+                             Pipeline &to )
    {
 
    }
 
-
-   void Pipeline::run( )
+   void Service::run( )
    {
 
    }
-
 
 }
