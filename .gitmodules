@@ -7,3 +7,6 @@
 [submodule "nng"]
 	path = nng
 	url = git@github.com:nanomsg/nng.git
+[submodule "cppack"]
+	path = cppack
+	url = git@github.com:mikeloomisgg/cppack.git
