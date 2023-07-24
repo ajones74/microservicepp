@@ -6,7 +6,7 @@
 
 namespace mspp {
 
-   using json = nlohmann::json
+   using json = nlohmann::json;
 
 class Service {
    public: 

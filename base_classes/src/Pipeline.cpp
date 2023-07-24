@@ -20,8 +20,8 @@ namespace mspp {
    //  * "format=XML"
    //  * "format=default"  (std::string)
    //  * "format=protobuf"  (google protobuf)
-   //  * "format=flatpack"  
-   auto pull( const std::string &format )
+   //  * "format=msgpack"  
+   std::string pull( const std::string &format )
    {
       std::string ret_val;
 

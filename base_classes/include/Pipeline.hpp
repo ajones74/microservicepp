@@ -13,7 +13,7 @@ class Pipeline {
       Pipeline( ) = delete;
       Pipeline( const std::string &pipeline_string );
       virtual void connect( ); 
-      auto pull( const std::string &format );
+      std::string pull( const std::string &format );
 
    private:
       std::string m_pipeline_name;
