@@ -19,6 +19,19 @@ namespace mspp {
 
    }
 
+   void Pipeline::link_pipes( const std::string &from,
+                              Pipeline &to )
+   {
+
+   }
+
+   void Pipeline::link_pipes( Pipeline &from,
+                              Pipeline &to )
+   {
+
+   }
+
+
    void Pipeline::run( )
    {
 

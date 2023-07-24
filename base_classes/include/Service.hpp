@@ -6,6 +6,8 @@
 
 namespace mspp {
 
+   using json = nlohmann::json
+
 class Service {
    public: 
       Service( ) = delete;
@@ -17,11 +19,15 @@ class Service {
          m_config_pipeline{ config_pipe }
       { };
 
-      void set_configuration( const json &config_json );
+      void set_configuration( const nlohmann::json &config_json );
       void make_pipe( const std::string &pipe_label );
       
       void link_pipes( const std::string &from,
                        const std::string &to );
+      void link_pipes( const std::string &from,
+                       Pipeline &to);
+      void link_pipes( Pipeline &from,
+                       Pipeline &to );
       void run( );
    private:
       std::string m_service_name;

@@ -56,7 +56,8 @@
 #include <nng/protocol/pipeline0/push.h>
 
 #include <mspp_exceptions.hpp>
-
+#include <Pipeline.hpp>
+#include <Service.hpp>
 
 void example_of_using_nng( )
 {
@@ -111,7 +112,7 @@ int main(int argc, const char **argv)
       Pipeline config_pipe = Pipeline( "service:configuration" );
      
       // this will throw an exception on failure to connect.
-      config_pipe.connect()
+      config_pipe.connect();
 
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
