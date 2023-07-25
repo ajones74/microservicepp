@@ -1,6 +1,6 @@
 CXXFLAGS += -std=c++17 -O2 -Wall 
 
-GPS_SRCS := gps_service.cpp \
+COMMON_SRCS := \
 		  ../exceptions/src/mspp_exceptions.cpp \
 		  ../base_classes/src/Pool.cpp \
 		  ../base_classes/src/Pipeline.cpp \
@@ -9,6 +9,10 @@ GPS_SRCS := gps_service.cpp \
 		  ../base_classes/src/Section.cpp \
 		  ../base_classes/src/SLP_Parser.cpp
 
+
+GPS_SRCS := gps_service.cpp 
+CONFIG_SRCS := configuration_service.cpp 
+LOGGING_SRCS := logging_service.cpp 
 
 LIBPATH := -L../nng/build/
 LIBS := -lpthread -lnng
@@ -27,18 +31,18 @@ LOGGING_BIN = logging_service
 CONFIG_BIN = configuration_service
 
 
-all: $(GPS_BIN) 
+all: $(LOGGING_BIN) $(CONFIG_BIN) $(GPS_BIN)
 
 
-$(GPS_BIN): $(GPS_SRCS)
+$(GPS_BIN): $(GPS_SRCS) $(COMMON_SRCS)
 	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./gps_service_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
-$(CONFIG_BIN): $(CONFIG_SRCS)
+$(CONFIG_BIN): $(CONFIG_SRCS) $(COMMON_SRCS)
 	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./configuration_service_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
-$(LOGGING_BIN): $(LOGGING_SRCS)
+$(LOGGING_BIN): $(LOGGING_SRCS) $(COMMON_SRCS)
 	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./logging_service_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
