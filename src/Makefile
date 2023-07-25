@@ -6,7 +6,8 @@ GPS_SRCS := gps_service.cpp \
 		  ../base_classes/src/Pipeline.cpp \
 		  ../base_classes/src/Pump.cpp \
 		  ../base_classes/src/Service.cpp \
-		  ../base_classes/src/Section.cpp
+		  ../base_classes/src/Section.cpp \
+		  ../base_classes/src/SLP_Parser.cpp
 
 
 LIBPATH := -L../nng/build/

@@ -1,8 +1,10 @@
+#include <iostream>
+#include <string>
+
 #include <mspp_exceptions.hpp>
 #include <Pipeline.hpp>
 #include <SLP_Parser.hpp>
 
-#include <string>
 
 
 namespace mspp {
@@ -28,9 +30,16 @@ namespace mspp {
    //  * "format=default"  (std::string)
    //  * "format=protobuf"  (google protobuf)
    //  * "format=msgpack"  
+   std::string Pipeline::pull( )
+   {
+      std::string ret_val;
+      return ret_val; 
+   }
    std::string Pipeline::pull( const std::string &format )
    {
       std::string ret_val;
       return ret_val; 
    }
+
+
 }

@@ -1,6 +1,8 @@
 #ifndef _SLP_PARSER_HPP_
 #define _SLP_PARSER_HPP_
 
+#include <string>
+
 namespace mspp {
 
 /* The EBNF notation for our schema is:

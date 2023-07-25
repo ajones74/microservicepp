@@ -1,6 +1,7 @@
 #ifndef _MSPP_EXCEPTIONS_HPP_
 #define _MSPP_EXCEPTIONS_HPP_
 
+#include <iostream>
 #include <exception>
 #include <string>
 
