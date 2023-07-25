@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <Section.hpp>
+#include <SLP_Parser.hpp>
 
 
 namespace mspp {
@@ -20,6 +21,12 @@ class Pipeline {
    private:
       std::string m_connection_string;
       std::vector<Section> m_sections;
+      std::vector<std::string> m_conn_string_tokens;
+      // All the key-value pairs found in the connection string
+      // following the '?' delimiter.
+      std::map<std::string, std::string> m_query_string_map;
+
+      SLP_Parser m_parser;
 };
 
 }

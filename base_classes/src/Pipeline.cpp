@@ -12,15 +12,25 @@ namespace mspp {
    Pipeline::Pipeline( const std::string &connection_string ) :
       m_connection_string{ connection_string }
    {
+      m_parser.set( m_connection_string );
    }
 
    // throws a runtime exception if the connection
    // to a service or other pump fails.
    void Pipeline::connect( )
    {
-      SLP_Parser parser;
+      // Most primitive tests for a valid connection string
+      m_parser.parseable( );
 
-      parser.parseable( m_connection_string );
+      // Decompose the connection string into constituent tokens
+      m_parser.tokenize_connection_string( m_conn_string_tokens ); 
+
+      // Parse the query string component (everything after the '?', just as if
+      // the connection string were an HTTP URI) of the connection string
+      // into a key-value map
+      m_parser.tokenize_query_string( m_query_string_map );
+
+      if (m_parser.service_or_section()
 
    }
 

@@ -2,8 +2,6 @@
 #include <vector>
 #include <string>
 
-#include <cstring>
-
 /* 
 {
   	"service": "GPS",

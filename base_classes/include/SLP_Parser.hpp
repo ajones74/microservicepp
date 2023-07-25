@@ -1,7 +1,11 @@
 #ifndef _SLP_PARSER_HPP_
 #define _SLP_PARSER_HPP_
 
+#include <iostream>
+#include <vector>
+#include <map>
 #include <string>
+
 
 namespace mspp {
 
@@ -22,14 +26,19 @@ NOTE: A generated PNG of the connection schema can be found in docs/connection-s
 
 class SLP_Parser {
    public:
-      // The string to parse (str_to_parse) should conform
-      // as much as possible to RFC2608 -- some valid examples:
+
+      void set( const std::string &conn_string );
+      // Some valid examples:
       // *  "pipeline://./service/configuration?flow=pull&format=JSON"
       // *  "service://./service/GPS"
-      void parseable( const std::string &str_to_parse );
+      void parseable( );
 
+      void tokenize_connection_string( std::vector<std::string> &tokens );
+      
+      void tokenize_query_string( std::map<std::string, std::string> &map );
 
    private:
+      std::string m_connection_string;
 };
 
 

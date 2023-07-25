@@ -2,8 +2,6 @@
 #include <vector>
 #include <string>
 
-#include <cstring>
-
 /* 
 {
   	"service": "GPS",
@@ -58,37 +56,6 @@
 #include <mspp_exceptions.hpp>
 #include <Pipeline.hpp>
 #include <Service.hpp>
-
-void example_of_using_nng( )
-{
-      nng_socket sock;
-      int rv;
-      char msg[2];
-
-      std::cout << "PRE - Open the socket." << std::endl;
-      if ((rv = nng_push0_open(&sock)) != 0) 
-      {
-         std::cout << "nng_push0_open" << rv ;
-      }
-      std::cout << "POST - Open the socket." << std::endl;
-  
-
-      std::cout << "PRE - DIAL the socket." << std::endl;
-      if ((rv = nng_dial(sock, "...", NULL, 0)) != 0) 
-      {
-         std::cout << "nng_dial error(" << rv  << ")" << std::endl;
-      }
-      std::cout << "POST - DIAL the socket." << std::endl;
-
-      // Interesting ... by default, nng_send(...) is a BLOCKING call!
-      std::cout << "PRE - SEND the socket." << std::endl;
-      if ((rv = nng_send(sock, msg, strlen(msg)+1, 0)) != 0)
-      {
-         std::cout << "nng_dial" << rv ;
-      }
-      std::cout << "POST - SEND the socket." << std::endl;
-}
-
 
 
 int main(int argc, const char **argv) 
