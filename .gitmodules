@@ -10,3 +10,6 @@
 [submodule "cppack"]
 	path = cppack
 	url = git@github.com:mikeloomisgg/cppack.git
+[submodule "spdlog"]
+	path = spdlog
+	url = git@github.com:gabime/spdlog.git
