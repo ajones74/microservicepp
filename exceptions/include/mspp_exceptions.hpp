@@ -1,8 +1,8 @@
 #ifndef _MSPP_EXCEPTIONS_HPP_
 #define _MSPP_EXCEPTIONS_HPP_
 
-#include <string>
 #include <exception>
+#include <string>
 
 /* Almost all runtime exceptions should be handled using std::runtime_error
  * objects.

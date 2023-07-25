@@ -12,12 +12,13 @@ namespace mspp {
 class Pipeline {
    public:
       Pipeline( ) = delete;
-      Pipeline( const std::string &pipeline_string );
+      Pipeline( const std::string &connection_string );
       void connect( ); 
+      std::string pull( );
       std::string pull( const std::string &format );
 
    private:
-      std::string m_pipeline_name;
+      std::string m_connection_string;
       std::vector<Section> m_sections;
 };
 

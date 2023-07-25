@@ -28,6 +28,13 @@ class Service {
                        Pipeline &to);
       void link_pipes( Pipeline &from,
                        Pipeline &to );
+
+      // * Calling this function establishes the ROLE ( client / server )
+      //   and PATTERN ( pub/sub, ventilator/worker/sink, push/pull, etc )
+      //   for this SERVICE.
+      // * Calling the connect() method in a PIPELINE is a complementary
+      //   perspective: ROLEs are reversed and the complementary pattern
+      //   is used.
       void run( );
 
    private:

@@ -12,7 +12,7 @@
   		"start": "WAITING"
   	},
   	"pipelines": [{
-  			"pipeline": "SOURCE",
+  			"pipeline": "from:",
   			"sections": [{
   					"pump": "serial?device=/dev/ttymxc4,baud=115200,parity=none,databits=8,stopbits=1,flow=none"
   				},
@@ -28,7 +28,7 @@
   			]
   		},
   		{
-  			"pipeline": "DEBUG",
+  			"pipeline": "from:",
   			"sections": [{
   					"pump": "serial?device=/dev/ttymxc4,baud=115200,parity=none,databits=8,stopbits=1,flow=none"
   				},
@@ -41,7 +41,7 @@
   			]
   		},
       {
-         "pipeline": "SINK",
+         "pipeline": "to:",
          "sections" : [ {
                "pool": "nng?
             }
@@ -100,26 +100,23 @@ int main(int argc, const char **argv)
       using namespace mspp;
       using json = nlohmann::json;
 
-      // Connect a pipe to the LOGGING service. 
-      // Pass it as the second arg to the service constructor
-      Pipeline logging_pipe = Pipeline( "service:logging" );
-      
-      // this will throw an exception on failure to connect.
+      // Create a pipeline to the LOGGING service. 
+      Pipeline logging_pipe = Pipeline( "pipeline://./service/logging?flow=push" );
+     
+      // Throws an exception on failure to connect.
       logging_pipe.connect();
 
-      // Connect a pipe to the CONFIG service, 
-      // Pass it as the third arg to the service constructor
-      Pipeline config_pipe = Pipeline( "service:configuration" );
+      Pipeline config_pipe = Pipeline( "pipeline://./service/configuration?flow=pull&format=JSON" );
      
-      // this will throw an exception on failure to connect.
+      // Throws an exception on failure to connect.
       config_pipe.connect();
 
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
-      json config_json = config_pipe.pull( "format=JSON" );
+      json config_json = config_pipe.pull( );
 
       // Create our service...
-      Service GPS_service = Service( "service:GPS", 
+      Service GPS_service = Service( "service://./service/GPS", 
                                      logging_pipe, 
                                      config_pipe );
       GPS_service.set_configuration( config_json );
