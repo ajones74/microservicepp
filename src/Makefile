@@ -2,9 +2,8 @@ CXXFLAGS += -std=c++17 -O2 -Wall
 
 COMMON_SRCS := \
 		  ../exceptions/src/mspp_exceptions.cpp \
-		  ../base_classes/src/Pool.cpp \
+		  ../base_classes/src/Port.cpp \
 		  ../base_classes/src/Pipeline.cpp \
-		  ../base_classes/src/Pump.cpp \
 		  ../base_classes/src/Service.cpp \
 		  ../base_classes/src/Section.cpp \
 		  ../base_classes/src/SLP_Parser.cpp
@@ -23,8 +22,7 @@ INCPATH := -I../json/single_include \
 			-I../exceptions/include \
          -I../services/include \
 		   -I../sections/include \
-		   -I../pools/include \
-		   -I../pumps/include
+		   -I../ports/include
 
 GPS_BIN = gps_service
 LOGGING_BIN = logging_service

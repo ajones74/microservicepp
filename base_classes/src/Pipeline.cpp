@@ -99,7 +99,21 @@ namespace mspp {
       // 
       //
 
-      if ( 
+      if ( service_name == "logging" )
+      {
+
+      } else if ( service_name == "configuration" )
+      {
+
+      } else {
+         // This is a custom or extended service that requires a
+         // GET/CONFIGURATION/SERVICE/<SERVICE_NAME>/MAIN request to the
+         // configuration service -- store the results in this Pipelines'
+         //
+      }
+
+
+
 
 
 
