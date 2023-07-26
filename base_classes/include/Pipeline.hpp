@@ -19,6 +19,9 @@ class Pipeline {
       std::string pull( const std::string &format );
 
    private:
+      //
+      // MEMBERS
+      // 
       std::string m_connection_string;
       std::vector<Section> m_sections;
       std::vector<std::string> m_conn_string_tokens;
@@ -27,6 +30,13 @@ class Pipeline {
       std::map<std::string, std::string> m_query_string_map;
 
       SLP_Parser m_parser;
+
+      //
+      // METHODS
+      //
+      void connect_to_service( );
+      void connect_to_section( );
+
 };
 
 }

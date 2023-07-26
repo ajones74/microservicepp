@@ -25,12 +25,21 @@ namespace mspp {
       // Decompose the connection string into constituent tokens
       m_parser.tokenize_connection_string( m_conn_string_tokens ); 
 
-      // Parse the query string component (everything after the '?', just as if
-      // the connection string were an HTTP URI) of the connection string
+      // Parse the query string (everything after the '?', just as if
+      // the connection string were an HTTP URL) of the connection string
       // into a key-value map
       m_parser.tokenize_query_string( m_query_string_map );
 
-      if (m_parser.service_or_section()
+
+      if ( m_parser.primary_resource().compare("service") == 0 )
+      {
+         // Connect to a (remote/local) service...
+         connect_to_service( );
+      } else
+      {
+         // Connect to a pipe section...
+         connect_to_section( );
+      }
 
    }
 
@@ -50,6 +59,17 @@ namespace mspp {
       std::string ret_val;
       return ret_val; 
    }
+
+   void Pipeline::connect_to_service( )
+   {
+
+   }
+
+   void Pipeline::connect_to_section( )
+   {
+
+   }
+
 
 
 }

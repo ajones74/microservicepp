@@ -37,6 +37,10 @@ class SLP_Parser {
       
       void tokenize_query_string( std::map<std::string, std::string> &map );
 
+      std::string primary_resource( ) const;
+
+      std::string secondary_resource( ) const;
+
    private:
       std::string m_connection_string;
 };
