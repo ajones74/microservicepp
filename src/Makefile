@@ -15,7 +15,7 @@ CONFIG_SRCS := configuration_service.cpp
 LOGGING_SRCS := logging_service.cpp 
 
 LIBPATH := -L../nng/build/
-LIBS := -lpthread -lnng
+LIBS := -lstdc++fs -lpthread -lnng
 
 INCPATH := -I../json/single_include \
 			  -I../nng/include/ \

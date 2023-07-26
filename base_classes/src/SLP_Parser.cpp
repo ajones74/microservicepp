@@ -45,7 +45,6 @@ namespace mspp {
    std::string SLP_Parser::primary_resource( ) const
    {
       return std::string{"under construction"};
-
    }
 
    std::string SLP_Parser::secondary_resource( ) const
