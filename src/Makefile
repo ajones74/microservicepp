@@ -9,9 +9,9 @@ COMMON_SRCS := \
 		  ../base_classes/src/SLP_Parser.cpp
 
 
-GPS_SRCS := gps_service.cpp 
-CONFIG_SRCS := configuration_service.cpp 
-LOGGING_SRCS := logging_service.cpp 
+GPS_SRCS := ../services/src/GPS_Service.cpp
+CONFIG_SRCS := ../services/src/Configuration_Service.cpp
+LOGGING_SRCS := ../services/src/Logging_Service.cpp
 
 LIBPATH := -L../nng/build/
 LIBS := -lstdc++fs -lpthread -lnng

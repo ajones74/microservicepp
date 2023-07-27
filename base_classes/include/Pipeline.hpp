@@ -31,6 +31,7 @@ class Pipeline {
 
       SLP_Parser m_parser;
 
+
       //
       // METHODS
       //
