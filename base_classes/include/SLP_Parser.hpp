@@ -33,16 +33,31 @@ class SLP_Parser {
       // *  "service://./service/GPS"
       void parseable( );
 
-      void tokenize_connection_string( std::vector<std::string> &tokens );
+      void tokenize_connection_string( );
       
-      void tokenize_query_string( std::map<std::string, std::string> &map );
+      void tokenize_query_string( );
 
       std::string primary_resource( ) const;
 
       std::string secondary_resource( ) const;
 
+      std::string query_string_value( const std::string &key ) const;
+
    private:
+      // protocol://host/primary_resource/secondary_resource?key1=value1&key2=value2&...
       std::string m_connection_string;
+      
+      // decompose the connection string into its basic tokens:
+      // * protocol
+      // * host  ( . or 127.0.0.1 or localhost or IP-address or FQDN.
+      // * primary resource  (service or section)k
+      // * secondary resource (logging, configuration, GPS, etc)
+      // * key-value pairs of the query string are parsed ELSEWHERE.
+      std::map<std::string, std::string> string_tokens;
+
+      // A mapping of all of the key-value pairs in the query-string
+      std::map<std::string, std::string> query_string_pairs;
+
 };
 
 

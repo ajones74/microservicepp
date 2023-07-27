@@ -25,13 +25,12 @@ namespace mspp {
       m_parser.parseable( );
 
       // Decompose the connection string into constituent tokens
-      m_parser.tokenize_connection_string( m_conn_string_tokens ); 
+      m_parser.tokenize_connection_string( ); 
 
       // Parse the query string (everything after the '?', just as if
       // the connection string were an HTTP URL) of the connection string
       // into a key-value map
-      m_parser.tokenize_query_string( m_query_string_map );
-
+      m_parser.tokenize_query_string( );
 
       const std::string primary_resource{ m_parser.primary_resource( ) };
       if ( primary_resource == "service" )
@@ -69,8 +68,9 @@ namespace mspp {
    // Throws an exception if the connection to the SERVICE fails.
    void Pipeline::connect_to_service( )
    {
-      // Using the secondary resource identified found in the SLP_Parser,
+      // Using the secondary resource identified in the SLP_Parser,
       // use it to connect via IPC to something like:
+      //
       //   ipc:///tmp/service/<SECONDARY_RESOURCE_NAME>.ipc
       const std::string service_name = m_parser.secondary_resource( );
       const std::string IPC_service = "/tmp/service/" +  
@@ -85,7 +85,7 @@ namespace mspp {
 
       if ( std::filesystem::exists( service_path ) == false )
       {
-         std::string msg = "File not found(" + IPC_service + ")";
+         std::string msg = "IPC file not found(" + IPC_service + ")";
          throw mspp_startup_exception( msg );
       }
 
@@ -133,6 +133,7 @@ namespace mspp {
    {
       int rv;
 
+      // TODO: This shouldn't be hardcoded and/or limitted to local scope
       const std::string service_URL = "ipc:///tmp/service/logging.ipc";
 
       if ( ( rv = nng_push0_open( &m_logging_socket ) ) != 0)
@@ -155,7 +156,13 @@ namespace mspp {
                             NNG_FLAG_NONBLOCK ) ) != 0)
       {
          std::stringstream iss;
-         iss << __FUNCTION__ << ": nng_dial() - (" << rv << ")";
+         iss << __FUNCTION__ 
+            << ": nng_dial() - (" 
+            << rv 
+            << "), ("
+            << service_URL 
+            << ")" 
+            << std::endl;
          throw mspp_startup_exception( iss.str() );
       }
 
@@ -176,11 +183,112 @@ namespace mspp {
          throw mspp_startup_exception( iss.str() );
       }
 
+      // TODO: Associate the nng socket with a logging object, where
+      // logging to the service is an aesthetic veneer:
+      //
+      //  m_logger.log( "Something Bad happened" );  --> logging service.
    }
 
 
+   //
+   //   * CONFIG(CLIENT)  --> DIAL and REQUEST
+   //
    void Pipeline::connect_to_configuration_service( )
    {
+      int rv;
+
+      // TODO: This shouldn't be hardcoded and/or limitted to local scope
+      const std::string service_URL = "ipc:///tmp/service/configuration.ipc";
+      if ( ( rv = nng_req0_open( &m_configuration_socket ) ) != 0)
+      {
+         std::stringstream iss;
+         iss << __FUNCTION__ << ": nng_req0_open() - (" << rv << ")";
+         throw mspp_startup_exception( iss.str() );
+      }
+
+      // N.B: "nng_dial()" BOTH crates and STARTS the dialer --
+      //      maybe I want to do a "nng_dialer_create()", followed
+      //      with a "nng_dialer_start()", LATER?????
+      //
+      // N.B: NNG_FLAG_NONBLOCK flag to nng_dial() can help an application
+      // be more resilient, it also generally makes diagnosing failures 
+      // somewhat more difficult.
+      if ( ( rv = nng_dial( m_configuration_socket,
+                            service_URL.c_str(),
+                            NULL,
+                            NNG_FLAG_NONBLOCK ) ) != 0)
+      {
+         std::stringstream iss;
+         iss << __FUNCTION__ 
+            << ": nng_dial() - (" 
+            << rv 
+            << "), ("
+            << service_URL 
+            << ")" 
+            << std::endl;
+         throw mspp_startup_exception( iss.str() );
+      }
+
+      // Send a REQUEST for configuration with a message that looks like:
+      //
+      //  "get/configuration/service/GPS"  -or -
+      //  "get/configuration/section/GPS_port"  
+      //
+      std::stringstream greeting;
+      greeting << "get/configuration/service/"
+               << m_parser.query_string_value( "service" )
+               << std::endl;
+      if ( ( rv = nng_send( m_configuration_socket,
+                            (void *)greeting.str( ).c_str( ),
+                            greeting.str().length()+1,
+                            0 ) ) != 0 )
+      {
+         std::stringstream iss;
+         iss << __FUNCTION__ << ": nng_send() - (" << rv << ")";
+         throw mspp_startup_exception( iss.str() );
+      }
+
+
+      // Get the RESPONSE -- a JSON-structured document
+      // for the configuration for this service:
+      //
+      size_t buf_size = 0;
+      char *buf = nullptr;
+      if ( ( rv = nng_recv(  m_configuration_socket,
+                             &buf, 
+                             &buf_size,
+                             NNG_FLAG_ALLOC ) ) != 0 )
+      {
+         std::stringstream iss;
+         iss << __FUNCTION__ << ": nng_recv( ) - (" << rv << ")";
+         throw mspp_startup_exception( iss.str() );
+      }
+
+      // Can I safely assume this response is NUL-terminated???
+      if ( buf[buf_size] != 0 )
+      {
+         std::stringstream iss;
+         iss << __FUNCTION__ 
+             << ": nng_recv( ) - malformed or non-null-terminated string."
+             << std::endl;
+         throw mspp_startup_exception( iss.str() );
+      }
+
+
+      // move the received response into a JSON object --
+      // validate it?
+      //
+
+      // Now, free the heap-allocated memory allocated by the nng_recv()
+      // call.
+      nng_free( buf, buf_size );
+
+      
+                             
+                            
+
+
+     
 
    }
 

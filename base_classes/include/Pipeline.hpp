@@ -11,6 +11,8 @@
 
 #include <nng/nng.h>
 #include <nng/protocol/pipeline0/push.h>
+#include <nng/protocol/reqrep0/rep.h>
+#include <nng/protocol/reqrep0/req.h>
 
 namespace mspp {
 class Pipeline {
@@ -26,12 +28,6 @@ class Pipeline {
       // MEMBERS
       // 
       std::string m_connection_string;
-      std::vector<Section> m_sections;
-      std::vector<std::string> m_conn_string_tokens;
-      // All the key-value pairs found in the connection string
-      // following the '?' delimiter.
-      std::map<std::string, std::string> m_query_string_map;
-
       nlohmann::json m_system_configuration;
 
       SLP_Parser m_parser;

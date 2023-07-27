@@ -70,7 +70,7 @@ int main(int argc, const char **argv)
       // Throws an exception on failure to connect.
       logging_pipe.connect();
 
-      Pipeline config_pipe = Pipeline( "pipeline://./service/configuration?flow=pull&format=JSON" );
+      Pipeline config_pipe = Pipeline( "pipeline://./service/configuration?service=GPS" );
      
       // Throws an exception on failure to connect.
       config_pipe.connect();

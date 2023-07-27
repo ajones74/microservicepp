@@ -32,12 +32,12 @@ namespace mspp {
       }
    }
 
-   void SLP_Parser::tokenize_connection_string ( std::vector<std::string> &tokens )
+   void SLP_Parser::tokenize_connection_string ( )
    {
 
    }
 
-   void SLP_Parser::tokenize_query_string( std::map<std::string, std::string> &map )
+   void SLP_Parser::tokenize_query_string( )
    {
 
    }
@@ -48,6 +48,11 @@ namespace mspp {
    }
 
    std::string SLP_Parser::secondary_resource( ) const
+   {
+      return std::string{"under construction"};
+   }
+
+   std::string SLP_Parser::query_string_value( const std::string &key ) const
    {
       return std::string{"under construction"};
    }
