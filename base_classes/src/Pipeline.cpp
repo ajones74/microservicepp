@@ -48,21 +48,22 @@ namespace mspp {
       }
    }
 
-   // Pull the data from the pipeline in the specified format:
-   //  * "format=JSON"
-   //  * "format=XML"
-   //  * "format=default"  (std::string)
-   //  * "format=protobuf"  (google protobuf)
-   //  * "format=msgpack"  
    std::string Pipeline::pull( )
    {
-      std::string ret_val;
-      return ret_val; 
+      return m_pulled_configuration; 
    }
+
+   // Pull a work-item form the end port of the pipeline, in a 
+   // format/encoding specified in the string:
+   //  "format=std::string"  (default)
+   //  "format=JSON"
+   //  "format=XML"
+   //  "format=msgpack"
+   //  "encode=UTF-8"
+   //  "encode=UTF-32", etc.
    std::string Pipeline::pull( const std::string &format )
    {
-      std::string ret_val;
-      return ret_val; 
+      return m_pulled_configuration; 
    }
 
    // Throws an exception if the connection to the SERVICE fails.
@@ -80,7 +81,10 @@ namespace mspp {
       // As we are the CLIENT/DIALLER, we don't want to create the IPC
       // file -- this is the responsibility of the .run() method in the
       // Service class.
-      // If the IPC file does NOT exist. Bail.
+      // If the IPC file does NOT exist, Bail.
+      //
+      // NOTE: This may not be a good policy. I'm okay in removing it
+      //       if it is a headache...
       std::filesystem::path service_path{ IPC_service };
 
       if ( std::filesystem::exists( service_path ) == false )
@@ -205,7 +209,6 @@ namespace mspp {
          iss << __FUNCTION__ << ": nng_req0_open() - (" << rv << ")";
          throw mspp_startup_exception( iss.str() );
       }
-
       // N.B: "nng_dial()" BOTH crates and STARTS the dialer --
       //      maybe I want to do a "nng_dialer_create()", followed
       //      with a "nng_dialer_start()", LATER?????
@@ -219,16 +222,11 @@ namespace mspp {
                             NNG_FLAG_NONBLOCK ) ) != 0)
       {
          std::stringstream iss;
-         iss << __FUNCTION__ 
-            << ": nng_dial() - (" 
-            << rv 
-            << "), ("
-            << service_URL 
-            << ")" 
-            << std::endl;
+         iss << __FUNCTION__ << ": nng_dial() - (" 
+             << rv << "), ("
+             << service_URL << ")" << std::endl;
          throw mspp_startup_exception( iss.str() );
       }
-
       // Send a REQUEST for configuration with a message that looks like:
       //
       //  "get/configuration/service/GPS"  -or -
@@ -247,8 +245,6 @@ namespace mspp {
          iss << __FUNCTION__ << ": nng_send() - (" << rv << ")";
          throw mspp_startup_exception( iss.str() );
       }
-
-
       // Get the RESPONSE -- a JSON-structured document
       // for the configuration for this service:
       //
@@ -263,7 +259,6 @@ namespace mspp {
          iss << __FUNCTION__ << ": nng_recv( ) - (" << rv << ")";
          throw mspp_startup_exception( iss.str() );
       }
-
       // Can I safely assume this response is NUL-terminated???
       if ( buf[buf_size] != 0 )
       {
@@ -273,27 +268,17 @@ namespace mspp {
              << std::endl;
          throw mspp_startup_exception( iss.str() );
       }
-
-
-      // move the received response into a JSON object --
-      // validate it?
-      //
-
+      // move the received response into a std::string, to be fetched later
+      // using the ::pul() or ::pull (std::string) functions:
+      m_pulled_configuration = std::string{buf}; 
       // Now, free the heap-allocated memory allocated by the nng_recv()
       // call.
       nng_free( buf, buf_size );
-
-      
-                             
-                            
-
-
-     
-
    }
 
    void Pipeline::connect_to_custom_service( )
    {
-
+      std::string msg = std::string{__FUNCTION__} + std::string{": UNIMPLEMENTED."}; 
+      throw mspp_startup_exception( msg );
    }
 }

@@ -20,7 +20,15 @@ class Pipeline {
       Pipeline( ) = delete;
       Pipeline( const std::string &connection_string );
       void connect( ); 
+      // Pull a work-item from the end port of the pipeline
       std::string pull( );
+      // Pull a work-item form the end port of the pipeline, in a 
+      // format/encoding specified in the string:
+      //  "format=std::string"  (default)
+      //  "format=JSON"
+      //  "format=XML"
+      //  "encode=UTF-8"
+      //  "encode=UTF-32", etc.
       std::string pull( const std::string &format );
 
    private:
@@ -28,7 +36,8 @@ class Pipeline {
       // MEMBERS
       // 
       std::string m_connection_string;
-      nlohmann::json m_system_configuration;
+      // The configuration pulled from the configuration service in JSON format
+      std::string  m_pulled_configuration;
 
       SLP_Parser m_parser;
 
