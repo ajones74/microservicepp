@@ -65,12 +65,12 @@ int main(int argc, const char **argv)
       using json = nlohmann::json;
 
       // Create a pipeline to the LOGGING service. 
-      Pipeline logging_pipe = Pipeline( "pipeline://./service/logging?flow=push" );
+      Pipeline logging_pipe = Pipeline( "pipeline://./service/logging" );
      
       // Throws an exception on failure to connect.
       logging_pipe.connect();
 
-      Pipeline config_pipe = Pipeline( "pipeline://./service/configuration?service=GPS" );
+      Pipeline config_pipe = Pipeline( "pipeline://./service/configuration?service=GPS?flow=both" );
      
       // Throws an exception on failure to connect.
       config_pipe.connect();
@@ -78,6 +78,17 @@ int main(int argc, const char **argv)
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
       json config_json = config_pipe.pull( );
+
+      // All source sections support "fan out" interfaces, 
+      // so this is the way to instrument a data source with a debug pipeline
+      Pipeline data_pipe          = Pipeline( "pipeline://./section/source/serial?device=ttymxc0" );
+      Pipeline debug_pipe         = Pipeline( "pipeline://./section/source/serial?device=ttymxc0" );
+
+      // All sink sections support "fan in" interfaces.
+      // This is the way to publish data from a debug pipeline -- change the "topic", though!
+      Pipeline publish_data_pipe  = Pipeline( "pipeline://./section/sink/publish?topic=GPS/data" );
+      Pipeline publish_debug_pipe = Pipeline( "pipeline://./section/sink/publish?topic=GPS/debug" );
+
 
       // Create our service...
       Service GPS_service = Service( "service://./service/GPS", 

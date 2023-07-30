@@ -250,10 +250,10 @@ namespace mspp {
       //
       size_t buf_size = 0;
       char *buf = nullptr;
-      if ( ( rv = nng_recv(  m_configuration_socket,
-                             &buf, 
-                             &buf_size,
-                             NNG_FLAG_ALLOC ) ) != 0 )
+      if ( ( rv = nng_recv( m_configuration_socket,
+                            &buf, 
+                            &buf_size,
+                            NNG_FLAG_ALLOC ) ) != 0 )
       {
          std::stringstream iss;
          iss << __FUNCTION__ << ": nng_recv( ) - (" << rv << ")";
@@ -271,7 +271,7 @@ namespace mspp {
       // move the received response into a std::string, to be fetched later
       // using the ::pul() or ::pull (std::string) functions:
       m_pulled_configuration = std::string{buf}; 
-      // Now, free the heap-allocated memory allocated by the nng_recv()
+      // Free the heap-allocated memory allocated by the nng_recv()
       // call.
       nng_free( buf, buf_size );
    }
