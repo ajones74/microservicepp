@@ -53,9 +53,13 @@
 #include <mspp_exceptions.hpp>
 #include <Pipeline.hpp>
 #include <Service.hpp>
+#include <Section.hpp>
 
 #include <Logging_service_pipelines.hpp>
 #include <Configuration_service_pipelines.hpp>
+
+#include <Serial_port_section.hpp>
+#include <NMEA_0183_filters_section.hpp>
 
 
 // NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
@@ -92,7 +96,7 @@ int main(int argc, const char **argv)
 
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
-      json config_json = configuration_service_pipe->pull( );
+      json config_json = configuration_service_pipe->pull( "format=JSON" );
 
       // Data source
       Section *serial_port_section  = 
@@ -105,7 +109,9 @@ int main(int argc, const char **argv)
          = new Service_push_section{ our_service_name };
 
       // Create a serial-port data pipeline specific to our service.
-      Pipeline &our_service_pipe = new Service_server_pipe;
+      // The ctor argument is any descriptive text string -- it's not 
+      // parsed or used for anything other than a label.
+      Pipeline &our_service_pipe = new Pipeline{ "GPS/Serial_Port/ttymxc0" };
       // Add the newly-minted sections created just above to our Pipeline.
       our_service_pipe.add_source( serial_port_section );
       our_service_pipe.add_section( gps_frame_section );
