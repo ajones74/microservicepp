@@ -54,10 +54,6 @@
 #include <Pipeline.hpp>
 #include <Service.hpp>
 
-#include <Logging_service_pipelines.hpp>
-#include <Configuration_service_pipelines.hpp>
-
-
 // NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
 //       * The CONFIGURATION SERVICE is the SECOND SERVICE to launch
 //       * The FPCM SERVICE is the THIRD SERVICE to launch.

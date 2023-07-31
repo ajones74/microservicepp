@@ -2,60 +2,14 @@
 #include <vector>
 #include <string>
 
-/* 
-{
-  	"service": "GPS",
-  	"config": {
-  		"logging": 3,
-  		"start": "WAITING"
-  	},
-  	"pipelines": [{
-  			"pipeline": "from:",
-  			"sections": [{
-  					"pump": "serial?device=/dev/ttymxc4,baud=115200,parity=none,databits=8,stopbits=1,flow=none"
-  				},
-  				{
-  					"frame": "NMEA 0183"
-  				},
-  				{
-  					"filter": "NMEA 0138?ALLOW=$GPGGA,ALLOW=$GPMRC"
-  				},
-  				{
-  					"decimate": 1.00
-  				}
-  			]
-  		},
-  		{
-  			"pipeline": "from:",
-  			"sections": [{
-  					"pump": "serial?device=/dev/ttymxc4,baud=115200,parity=none,databits=8,stopbits=1,flow=none"
-  				},
-  				{
-  					"frame": "NMEA 0183"
-  				},
-  				{
-  					"pool": "file?file=/opt/tm/logging/gps.txt"
-  				}
-  			]
-  		},
-      {
-         "pipeline": "to:",
-         "sections" : [ {
-               "pool": "nng?
-            }
-         ]
-      }
-  	]
-}
-*/
-
 #include <nlohmann/json.hpp>
 #include <mspp_exceptions.hpp>
-#include <Pipeline.hpp>
-#include <Service.hpp>
 
-#include <Logging_service_pipelines.hpp>
-#include <Configuration_service_pipelines.hpp>
+#include <Pipeline.hpp>
+#include <Custom_pipelines.hpp>
+
+#include <Service.hpp>
+#include <FPCM_Service.hpp>
 
 
 // NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
@@ -73,14 +27,14 @@ int main(int argc, const char **argv)
 {
    int exit_value = EXIT_SUCCESS;
 
-   const std::string our_service_name{"GPS Service" };
+   const std::string our_service_name{"FPCM Service" };
 
    try 
    {
       using namespace mspp;
       using json = nlohmann::json;
 
-      Pipeline* logging_service_pipe = 
+      Pipeline *logging_service_pipe = 
          new Logging_service_client_pipe{ our_service_name };
       // Throws an exception on failure to connect.
       logging_service_pipe->connect();
@@ -94,37 +48,30 @@ int main(int argc, const char **argv)
       // configuration service as a JSON-structured document.
       json config_json = configuration_service_pipe->pull( );
 
-      // Data source
-      Section *serial_port_section  = 
-         new Serial_port_section{"ttymxc4?baud=115200&flow=none"};
-      // Data filter, 1 of 1
-      Section *gps_frame_section = 
-         new NMEA_0183_Framer_section;
-      // Data sink
-      Section *service_push_section   
-         = new Service_push_section{ our_service_name };
 
-      // Create a serial-port data pipeline specific to our service.
-      Pipeline &our_service_pipe = new Service_server_pipe;
-      // Add the newly-minted sections created just above to our Pipeline.
-      our_service_pipe.add_source( serial_port_section );
-      our_service_pipe.add_section( gps_frame_section );
-      our_service_pipe.add_sink( service_push_section );
+      Pipeline *discovery_service_pipe = 
+         new Discovery_service_server_pipe;
+      // Throws an exception on failure to bind.
+      discovery_service_pipe->bind( );
 
-      // Create our local GPS service...
-      Service &GPS_server = new Service( our_service_name );
+      //
+      // Create our local FPCM service...Use a class derived from Service,
+      // as we have to implement the "run()" method -- by default,
+      // the "run()" method in most services simply responds to service 
+      // discovery polling.
+      Service &service = new FPCM_Service( our_service_name );
 
       // Add Logging pipe, configuration pipe, and the data-pipe to the service.
-      GPS_service.add( logging_service_pipe );
-      GPS_service.add( configuration_service_pipe );
-      GPS_service.add( our_service_pipe );
+      service.add( logging_service_pipe );
+      service.add( configuration_service_pipe );
+      service.add( discovery_service_pipe );
 
       // This calls the .start() methods (if applicable) for all 
       // associated pipes.
-      GPS_service->start( );
+      service->start( );
 
       // This function never returns unless SIGKILL/SIGTERM/SIGABRT recv'd      
-      GPS_service->run( );
+      service->run( run );
    } 
    catch ( const mspp::mspp_startup_exception &e ) 
    {
