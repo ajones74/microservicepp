@@ -50,87 +50,61 @@
 */
 
 #include <nlohmann/json.hpp>
-#include <nng/nng.h>
-#include <nng/protocol/pipeline0/push.h>
-
 #include <mspp_exceptions.hpp>
 #include <Pipeline.hpp>
 #include <Service.hpp>
-
-void example_of_using_nng( )
-{
-      nng_socket sock;
-      int rv;
-      char msg[2];
-
-      std::cout << "PRE - Open the socket." << std::endl;
-      if ((rv = nng_push0_open(&sock)) != 0) 
-      {
-         std::cout << "nng_push0_open" << rv ;
-      }
-      std::cout << "POST - Open the socket." << std::endl;
-  
-
-      std::cout << "PRE - DIAL the socket." << std::endl;
-      if ((rv = nng_dial(sock, "...", NULL, 0)) != 0) 
-      {
-         std::cout << "nng_dial error(" << rv  << ")" << std::endl;
-      }
-      std::cout << "POST - DIAL the socket." << std::endl;
-
-      // Interesting ... by default, nng_send(...) is a BLOCKING call!
-      std::cout << "PRE - SEND the socket." << std::endl;
-      if ((rv = nng_send(sock, msg, strlen(msg)+1, 0)) != 0)
-      {
-         std::cout << "nng_dial" << rv ;
-      }
-      std::cout << "POST - SEND the socket." << std::endl;
-}
-
 
 
 int main(int argc, const char **argv) 
 {
    int exit_value = EXIT_SUCCESS;
 
+   const std::string our_service_name{"GPS Service" };
+
    try 
    {
       using namespace mspp;
       using json = nlohmann::json;
 
-      // Create a pipeline to the LOGGING service. 
-      Pipeline logging_pipe = Pipeline( "pipeline://./service/logging?flow=push" );
-     
+      Pipeline* logging_pipe = new Logging_pipe{ our_service_name };
       // Throws an exception on failure to connect.
-      logging_pipe.connect();
+      logging_pipe->connect();
 
-      Pipeline config_pipe = Pipeline( "pipeline://./service/configuration?flow=pull&format=JSON" );
-     
+      Pipeline* configuration_pipe = new Configuration_pipe{ our_service_name };
       // Throws an exception on failure to connect.
-      config_pipe.connect();
+      configuration_pipe->connect();
 
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
-      json config_json = config_pipe.pull( );
+      json config_json = configuration_pipe->pull( );
+
+      // Data source
+      Section *serial_section    = new Serial_section{"ttymxc4?baud=115200&flow=none"};
+      // Data filter, 1 of 1
+      Section *gps_frame_section = new NMEA_0183_Framer_section;
+      // Data sink
+      Section *publish_section   = new Publisher_section{ our_service_name };
+
+      // Create a data pipeline specific to our service, and add the newly-minted
+      // sections.
+      Pipeline *source_pipe = new Service_source_pipe{ our_service_name };
+
+      source_pipe->begin_section( serial_section );
+      source_pipe->add_section( gps_frame_section );
+      source_pipe->end_section( publish_section );
 
       // Create our service...
-      Service GPS_service = Service( "service://./service/GPS", 
-                                     logging_pipe, 
-                                     config_pipe );
-      GPS_service.set_configuration( config_json );
+      Service *GPS_service = new Service( config_json );
 
-      // Find the description of the pipeline(s) in the confg_json object
-      GPS_service.make_pipe( "GPS/SOURCE" );
-      GPS_service.make_pipe( "GPS/DEBUG" );
-      GPS_service.make_pipe( "GPS/SINK" );
+      GPS_service->add_pipeline ( logging_pipe );
+      GPS_service->add_pipeline ( configuration_pipe );
+      GPS_service->add_pipeline ( our_publishing_pipe );
 
-      // Link the pipes meant for production
-      GPS_service.link_pipes( "GPS/SOURCE", "GPS/SINK");
-      // Link the pipes meant for debug/trace
-      GPS_service.link_pipes( "GPS/DEBUG", logging_pipe );
+      // This calls the .start() methods for all associated pipes.
+      GPS_service->start( );
 
       // This function never returns unless SIGKILL/SIGTERM/SIGABRT recv'd      
-      GPS_service.run( );
+      GPS_service->run( );
    } 
    catch ( const mspp::mspp_startup_exception &e ) 
    {
