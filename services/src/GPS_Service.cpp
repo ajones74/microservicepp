@@ -66,41 +66,47 @@ int main(int argc, const char **argv)
       using namespace mspp;
       using json = nlohmann::json;
 
-      Pipeline* logging_pipe = new Logging_pipe{ our_service_name };
+      Pipeline* logging_service_pipe = 
+         new Logging_service_client_pipe{ our_service_name };
       // Throws an exception on failure to connect.
-      logging_pipe->connect();
+      logging_service_pipe->connect();
 
-      Pipeline* configuration_pipe = new Configuration_pipe{ our_service_name };
+      Pipeline* configuration_service_pipe = 
+         new Configuration_service_client_pipe{ our_service_name };
       // Throws an exception on failure to connect.
-      configuration_pipe->connect();
+      configuration_service_pipe->connect();
 
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
-      json config_json = configuration_pipe->pull( );
+      json config_json = configuration_service_pipe->pull( );
 
       // Data source
-      Section *serial_section    = new Serial_section{"ttymxc4?baud=115200&flow=none"};
+      Section *serial_port_section  = 
+         new Serial_port_section{"ttymxc4?baud=115200&flow=none"};
       // Data filter, 1 of 1
-      Section *gps_frame_section = new NMEA_0183_Framer_section;
+      Section *gps_frame_section = 
+         new NMEA_0183_Framer_section;
       // Data sink
-      Section *publish_section   = new Publisher_section{ our_service_name };
+      Section *service_push_section   
+         = new Service_push_section{ our_service_name };
 
-      // Create a data pipeline specific to our service, and add the newly-minted
-      // sections.
-      Pipeline *source_pipe = new Service_source_pipe{ our_service_name };
+      // Create a serial-port data pipeline specific to our service.
+      Pipeline &our_service_pipe = new Service_pipe;
+      // Add the newly-minted sections created just above to our Pipeline.
+      our_service_pipe.add_source( serial_port_section );
+      our_service_pipe.add_section( gps_frame_section );
+      our_service_pipe.add_sink( service_push_section );
 
-      source_pipe->begin_section( serial_section );
-      source_pipe->add_section( gps_frame_section );
-      source_pipe->end_section( publish_section );
+      // Create our local GPS service...
+      Service &GPS_server = new Service( our_service_name );
 
-      // Create our service...
-      Service *GPS_service = new Service( config_json );
+      // Add Logging pipe, configuration pipe, and the data-pipe to the service.
+      GPS_service.add( logging_service_pipe );
+      GPS_service.add( configuration_service_pipe );
+      GPS_service.add( our_service_pipe );
 
-      GPS_service->add_pipeline ( logging_pipe );
-      GPS_service->add_pipeline ( configuration_pipe );
-      GPS_service->add_pipeline ( our_publishing_pipe );
-
-      // This calls the .start() methods for all associated pipes.
+      // This calls the .start() methods (if applicable) for all 
+      // associated pipes.
       GPS_service->start( );
 
       // This function never returns unless SIGKILL/SIGTERM/SIGABRT recv'd      
