@@ -54,7 +54,17 @@
 #include <Pipeline.hpp>
 #include <Service.hpp>
 
-
+// NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
+//       * The CONFIGURATION SERVICE is the SECOND SERVICE to launch
+//       * The FPCM SERVICE is the THIRD SERVICE to launch.
+//       ** The FPCM SERVICE uses its discovery service in conjunction
+//          with the configuration file fetched from the configuration 
+//          service to launch other services such as:
+//
+//          * GPS Service
+//          * IMU Service
+//          * RFM Service, etc.
+// 
 int main(int argc, const char **argv) 
 {
    int exit_value = EXIT_SUCCESS;
@@ -71,7 +81,7 @@ int main(int argc, const char **argv)
       // Throws an exception on failure to connect.
       logging_service_pipe->connect();
 
-      Pipeline* configuration_service_pipe = 
+      Pipeline *configuration_service_pipe = 
          new Configuration_service_client_pipe{ our_service_name };
       // Throws an exception on failure to connect.
       configuration_service_pipe->connect();
@@ -91,7 +101,7 @@ int main(int argc, const char **argv)
          = new Service_push_section{ our_service_name };
 
       // Create a serial-port data pipeline specific to our service.
-      Pipeline &our_service_pipe = new Service_pipe;
+      Pipeline &our_service_pipe = new Service_server_pipe;
       // Add the newly-minted sections created just above to our Pipeline.
       our_service_pipe.add_source( serial_port_section );
       our_service_pipe.add_section( gps_frame_section );
