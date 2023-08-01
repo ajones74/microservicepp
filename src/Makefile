@@ -5,8 +5,7 @@ COMMON_SRCS := \
 		  ../base_classes/src/Port.cpp \
 		  ../base_classes/src/Pipeline.cpp \
 		  ../base_classes/src/Service.cpp \
-		  ../base_classes/src/Section.cpp \
-		  ../base_classes/src/SLP_Parser.cpp
+		  ../base_classes/src/Section.cpp
 
 
 GPS_SRCS := ../services/src/GPS_Service.cpp

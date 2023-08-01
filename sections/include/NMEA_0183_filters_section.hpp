@@ -13,8 +13,8 @@ namespace mspp {
 
          virtual void stop( );
 
-
       private:
+
    };
 }
 
