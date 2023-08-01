@@ -10,7 +10,6 @@ namespace mspp {
 
 class Service {
    public: 
-      Service( ) = delete;
       Service( const std::string &service_name ) : 
          m_service_name{ service_name }
       { };

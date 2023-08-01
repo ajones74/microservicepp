@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <variant>
 
 /* 
 {
@@ -58,9 +59,11 @@
 
 #include <Logging_service_pipelines.hpp>
 #include <Configuration_service_pipelines.hpp>
+#include <GPS_service_pipelines.hpp>
 
 #include <Serial_port_section.hpp>
 #include <NMEA_0183_filters_section.hpp>
+#include <Push_port_section.hpp>
 
 
 
@@ -87,53 +90,55 @@ int main(int argc, const char **argv)
       using namespace mspp;
       using json = nlohmann::json;
 
-      Pipeline &logging_service_pipe = 
-         new Logging_service_client_pipe( our_service_name );
+      std::unique_ptr< Pipeline > logging_service_pipe = 
+         std::make_unique< Logging_service_client_pipe>( our_service_name );
       // Throws an exception on failure to connect.
-      logging_service_pipe.connect();
+      logging_service_pipe->connect();
 
-      Pipeline &configuration_service_pipe = 
-         new Configuration_service_client_pipe( our_service_name );
+      std::unique_ptr< Pipeline > configuration_service_pipe = 
+         std::make_unique< Configuration_service_client_pipe >( our_service_name );
       // Throws an exception on failure to connect.
-      configuration_service_pipe.connect();
+      configuration_service_pipe->connect();
 
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
-      json config_json = configuration_service_pipe.pull( "format=JSON" );
+      json config_json = configuration_service_pipe->pull( "format=JSON" );
 
       // Data source
-      Section &serial_port_section  = 
-         new Serial_port_section("ttymxc4?baud=115200&flow=none");
+      std::unique_ptr< Section > serial_port_section  = 
+         std::make_unique< Serial_port_section >("ttymxc4?baud=115200&flow=none");
       // Data filter, 1 of 1
-      Section &gps_frame_section = 
-         new NMEA_0183_Framer_section( "" );
+      std::unique_ptr< Section > gps_frame_section = 
+         std::make_unique< NMEA_0183_Framer_section >( " " );
       // Data sink
-      Section &push_port_section   
-         = new Push_port_section( "" );
+      //std::unique_ptr< Section > push_port_section =
+      //   std::make_unique< Push_port_section >( " " );
 
       // Create a serial-port data pipeline specific to our service.
       // The ctor argument is any descriptive text string -- it's not 
       // parsed or used for anything other than a label.
-      Pipeline &our_service_pipe = new Pipeline( "GPS/Serial/ttymxc0" );
+      std::unique_ptr< Pipeline > our_service_pipe = 
+         std::make_unique< GPS_service_data_pipe >( "GPS/Serial/ttymxc0" );
       // Add the newly-minted sections created just above to our Pipeline.
-      our_service_pipe.add_source( serial_port_section );
-      our_service_pipe.add_section( gps_frame_section );
-      our_service_pipe.add_sink( push_port_section );
+      our_service_pipe->add_source( serial_port_section );
+      our_service_pipe->add_section( gps_frame_section );
+      //our_service_pipe->add_sink( push_port_section );
 
       // Create our local GPS service...
-      Service &GPS_service = new Service( our_service_name );
+      std::unique_ptr< Service > GPS_service = 
+         std::make_unique< Service >( our_service_name );
 
       // Add Logging pipe, configuration pipe, and the data-pipe to the service.
-      GPS_service.add( logging_service_pipe );
-      GPS_service.add( configuration_service_pipe );
-      GPS_service.add( our_service_pipe );
+      GPS_service->add( logging_service_pipe );
+      GPS_service->add( configuration_service_pipe );
+      GPS_service->add( our_service_pipe );
 
       // This calls the .start() methods (if applicable) for all 
       // associated pipes.
-      GPS_service.start( );
+      GPS_service->start( );
 
       // This function never returns unless SIGKILL/SIGTERM/SIGABRT recv'd      
-      GPS_service.run( );
+      GPS_service->run( );
    } 
    catch ( const mspp::mspp_startup_exception &e ) 
    {

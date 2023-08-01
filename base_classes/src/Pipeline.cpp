@@ -11,21 +11,22 @@
 
 namespace mspp {
 
-   void Pipeline::add_source( )
+   void Pipeline::add_source( std::unique_ptr< Section > section )
    {
 
    }
 
-   void Pipeline::add_section( )
+   void Pipeline::add_section( std::unique_ptr< Section > section )
    {
 
    }
 
-   void Pipeline::add_sink( )
+   void Pipeline::add_sink( std::unique_ptr< Section > section )
    {
 
    }
 
+#if 0
    // ///////////////////////////////////////////////////////////
    //
    //
@@ -90,11 +91,9 @@ namespace mspp {
       //
       //  m_logger.log( "Something Bad happened" );  --> logging service.
    }
+#endif
 
-
-   //
-   //   * CONFIG(CLIENT)  --> DIAL and REQUEST
-   //
+#if 0
    void Pipeline::connect_to_configuration_service( )
    {
       int rv;
@@ -173,5 +172,6 @@ namespace mspp {
       // call.
       nng_free( buf, buf_size );
    }
+#endif 
 
 }

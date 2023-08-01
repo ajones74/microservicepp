@@ -1,8 +1,9 @@
 #ifndef _NMEA_0183_FILTERS_HPP_
 #define _NMEA_0183_FILTERS_HPP_ 
 
-namespace mspp {
+#include <Section.hpp>
 
+namespace mspp {
    class NMEA_0183_Framer_section : public Section {
       public:
          NMEA_0183_Framer_section( const std::string &init_string ) :

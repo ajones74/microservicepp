@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <variant>
 
 #include <Section.hpp>
 #include <SLP_Parser.hpp>
@@ -17,7 +18,6 @@
 namespace mspp {
 class Pipeline {
    public:
-      Pipeline( ) = delete;
       Pipeline( const std::string &descriptive_string ) :
          m_descriptive_string{ descriptive_string }
       { }
@@ -37,9 +37,9 @@ class Pipeline {
       // std::string.
       virtual std::string pull( ) = 0;
 
-      virtual void add_source( Section &section );
-      virtual void add_section( Section &section );
-      virtual void add_sink( Section &section );
+      virtual void add_source( std::unique_ptr< Section> section );
+      virtual void add_section( std::unique_ptr< Section> section  );
+      virtual void add_sink( std::unique_ptr< Section> section );
    protected:
       //
       // MEMBERS

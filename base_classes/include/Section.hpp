@@ -10,7 +10,6 @@ namespace mspp {
    class Section 
    {
       public:
-         Section( ) = delete;
          Section( const std::string &init_string ) :
             m_init_string{ init_string }
          { }
