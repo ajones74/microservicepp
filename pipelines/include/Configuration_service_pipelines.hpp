@@ -12,7 +12,7 @@ namespace mspp {
       public:
          Configuration_service_client_pipe() = delete;
          Configuration_service_client_pipe( const std::string &descriptive_string ) :
-            m_descriptive_string{ descriptive_string }
+            Pipeline{ descriptive_string }
          { }
 
 

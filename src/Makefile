@@ -8,7 +8,11 @@ COMMON_SRCS := \
 		  ../base_classes/src/Section.cpp
 
 
-GPS_SRCS := ../services/src/GPS_Service.cpp
+GPS_SRCS := GPS_Service.cpp \
+				../sections/src/Serial_port_section.cpp \
+				../sections/src/Push_port_section.cpp \
+				../sections/src/NMEA_0183_filters_section.cpp \
+
 CONFIG_SRCS := ../services/src/Configuration_Service.cpp
 LOGGING_SRCS := ../services/src/Logging_Service.cpp
 
@@ -19,16 +23,16 @@ INCPATH := -I../json/single_include \
 			  -I../nng/include/ \
          -I../base_classes/include \
 			-I../exceptions/include \
-         -I../services/include \
-		   -I../sections/include \
-		   -I../ports/include
+         -I../pipelines/include \
+		   -I../sections/include 
 
 GPS_BIN = gps_service
 LOGGING_BIN = logging_service
 CONFIG_BIN = configuration_service
 
 
-all: $(LOGGING_BIN) $(CONFIG_BIN) $(GPS_BIN)
+#all: $(LOGGING_BIN) $(CONFIG_BIN) $(GPS_BIN)
+all: $(GPS_BIN)
 
 
 $(GPS_BIN): $(GPS_SRCS) $(COMMON_SRCS)

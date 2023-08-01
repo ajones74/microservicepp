@@ -1,6 +1,8 @@
 #ifndef _SERVICE_HPP_
 #define _SERVICE_HPP_
 
+#include <string>
+
 #include <nlohmann/json.hpp>
 #include <Pipeline.hpp>
 
@@ -9,7 +11,7 @@ namespace mspp {
 class Service {
    public: 
       Service( ) = delete;
-      Service( const std::string &service_name );
+      Service( const std::string &service_name ) : 
          m_service_name{ service_name }
       { };
 

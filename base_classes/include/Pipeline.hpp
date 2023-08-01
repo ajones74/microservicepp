@@ -40,12 +40,12 @@ class Pipeline {
       virtual void add_source( Section &section );
       virtual void add_section( Section &section );
       virtual void add_sink( Section &section );
-   private:
+   protected:
       //
       // MEMBERS
       // 
       std::string m_descriptive_string;
-
+   private:
 
 };
 
