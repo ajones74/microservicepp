@@ -47,13 +47,12 @@ class Pipeline {
       // 
       std::string m_descriptive_string;
       bool m_connected;
-      
+     
       // There should really ever only be ONE source-section...
-      std::vector< std::unique_ptr< Section> > m_source_sections;
-      // There can be ZERO or more filter/mapper/adapter sections
-      std::vector< std::unique_ptr< Section> > m_filter_sections;
+      //   * Use "std::vector::begin" iterator!
       // There should really ever only be ONE sink-section...
-      std::vector< std::unique_ptr< Section> > m_sink_sections;
+      //   * Use "std::vector::end" iterator! 
+      std::vector< std::unique_ptr< Section> > m_sections;
 
 
    private:

@@ -11,19 +11,20 @@
 
 namespace mspp {
 
+
    void Pipeline::add_source( std::unique_ptr< Section > &&section )
    {
-
+      m_sections.insert( m_sections.begin(), std::move( section ) );
    }
 
    void Pipeline::add_section( std::unique_ptr< Section > &&section )
    {
-
+       m_sections.push_back( std::move(section) );
    }
 
    void Pipeline::add_sink( std::unique_ptr< Section > &&section )
    {
-
+      m_sections.insert( m_sections.end(), std::move( section ) );
    }
 
 #if 0

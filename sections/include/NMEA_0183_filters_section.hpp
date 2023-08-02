@@ -10,6 +10,8 @@ namespace mspp {
             Section{ init_string }
          { }
 
+         virtual void connect( );
+
          virtual void start( );
 
          virtual void stop( );

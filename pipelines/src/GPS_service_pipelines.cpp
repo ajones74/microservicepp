@@ -12,13 +12,17 @@ namespace mspp
    {
       if ( not m_connected )
       {
-         // Data source
+         // Data source -- FROM the serial port.
+         // TODO: The init-string should come from a configuration file
+         //       or some other configuration source
          std::unique_ptr< Section > serial_port_section  = 
             std::make_unique< Serial_port_section >("ttymxc4?baud=115200&flow=none");
-         // Data filter, 1 of 1
+         // Data filter, 1 of 1 
          std::unique_ptr< Section > gps_frame_section = 
             std::make_unique< NMEA_0183_Framer_section >( " " );
-         // Data sink
+         // Data sink -- 
+         //  * ROLE    == LISTEN()
+         //  * PATTERN == PUSH/SEND() 
          std::unique_ptr< Section > push_port_section =
             std::make_unique< Push_port_section >( " " );
 
@@ -26,6 +30,7 @@ namespace mspp
          add_source( std::move( serial_port_section ) );
          add_section( std::move( gps_frame_section ) );
          add_sink( std::move( push_port_section ) );
+
 
          m_connected = true;
       }

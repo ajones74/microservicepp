@@ -1,21 +1,25 @@
+//
+//  C++-17 header files
+//
 #include <iostream>
 #include <vector>
 #include <string>
 #include <variant>
-
+//
+// 3rd-party header files
+//
 #include <nlohmann/json.hpp>
-
+//
+//  Tampa Microwave proprietary header files.
+//
 #include <mspp_exceptions.hpp>
 #include <Pipeline.hpp>
 #include <Service.hpp>
 #include <Section.hpp>
-
 #include <GPS_service.hpp>
-
 #include <Logging_service_pipelines.hpp>
 #include <Configuration_service_pipelines.hpp>
 #include <GPS_service_pipelines.hpp>
-
 
 // NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
 //       * The CONFIGURATION SERVICE is the SECOND SERVICE to launch
@@ -32,13 +36,13 @@ int main(int argc, const char **argv)
 {
    int exit_value = EXIT_SUCCESS;
 
-   const std::string our_service_name{"GPS Service" };
-
    try 
    {
       using namespace mspp;
       using json = nlohmann::json;
 
+      const std::string our_service_name{"GPS Service" };
+      
       //
       //  Create a pipeline to the logging service
       //

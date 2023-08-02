@@ -11,13 +11,18 @@ namespace mspp {
    {
       public:
          Section( const std::string &init_string ) :
+            m_started{false},
             m_init_string{ init_string }
          { }
+
+         virtual void connect( ) = 0;
 
          virtual void start( ) = 0;
 
          virtual void stop( ) = 0;
 
+      protected:
+         bool m_started;
       private: 
          std::string m_init_string;
          std::map<std::string, std::string> m_init_pairs;

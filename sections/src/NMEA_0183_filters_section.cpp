@@ -4,6 +4,11 @@
 
 namespace mspp {
    
+   void NMEA_0183_Framer_section::connect( )
+   {
+
+   }
+
    void NMEA_0183_Framer_section::start( )
    {
 

@@ -54,7 +54,7 @@ $(LOGGING_BIN): $(LOGGING_SRCS) $(COMMON_SRCS)
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
 clean:
-	rm -f $(GPS_BIN) $(CONFIG_BIN) $(LOGGING_BIN) *_service_version.h
+	rm -f $(GPS_BIN) $(CONFIG_BIN) $(LOGGING_BIN) FPCM_version.h
 
 
 
