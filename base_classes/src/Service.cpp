@@ -6,12 +6,12 @@
 
 namespace mspp {
 
-   void Service::add( Pipeline &pipeline )
+   void Service::add( std::unique_ptr< Pipeline > &&pipeline  )
    {
 
    }
 
-   void Service::remove( Pipeline &pipeline )
+   void Service::remove( std::unique_ptr< Pipeline > &&pipeline )
    {
 
    }

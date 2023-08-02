@@ -12,6 +12,9 @@ GPS_SRCS := GPS_Service.cpp \
 				../sections/src/Serial_port_section.cpp \
 				../sections/src/Push_port_section.cpp \
 				../sections/src/NMEA_0183_filters_section.cpp \
+				../pipelines/src/Configuration_service_pipelines.cpp \
+				../pipelines/src/Logging_service_pipelines.cpp \
+				../pipelines/src/GPS_service_pipelines.cpp
 
 CONFIG_SRCS := ../services/src/Configuration_Service.cpp
 LOGGING_SRCS := ../services/src/Logging_Service.cpp

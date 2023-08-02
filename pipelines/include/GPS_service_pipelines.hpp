@@ -1,5 +1,5 @@
-#ifndef _CONF_SERV_PIPELINE_HPP_
-#define _CONF_SERV_PIPELINE_HPP_ 
+#ifndef  _GPS_SERV_PIPELINES_HPP_
+#define  _GPS_SERV_PIPELINES_HPP_ 
 
 #include <iostream>
 
@@ -30,11 +30,11 @@ namespace mspp {
          // std::string.
          virtual std::string pull( );
 
-         virtual void add_source( std::unique_ptr< Section > section );
+         virtual void add_source( std::unique_ptr< Section > &&section );
 
-         virtual void add_section( std::unique_ptr< Section > section );
+         virtual void add_section( std::unique_ptr< Section > &&section );
 
-         virtual void add_sink( std::unique_ptr< Section > section );
+         virtual void add_sink( std::unique_ptr< Section > &&section );
 
       private:
 

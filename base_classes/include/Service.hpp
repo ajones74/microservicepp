@@ -14,9 +14,9 @@ class Service {
          m_service_name{ service_name }
       { };
 
-      void add( Pipeline &pipeline );
+      void add( std::unique_ptr< Pipeline > && pipeline  );
 
-      void remove( Pipeline &pipeline );
+      void remove( std::unique_ptr< Pipeline > && pipeline );
 
       // Invoke the "start()" method for all pipelines. The pipelines are int
       // turn to call the "start()" method for their respective sections.

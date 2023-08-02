@@ -11,17 +11,17 @@
 
 namespace mspp {
 
-   void Pipeline::add_source( std::unique_ptr< Section > section )
+   void Pipeline::add_source( std::unique_ptr< Section > &&section )
    {
 
    }
 
-   void Pipeline::add_section( std::unique_ptr< Section > section )
+   void Pipeline::add_section( std::unique_ptr< Section > &&section )
    {
 
    }
 
-   void Pipeline::add_sink( std::unique_ptr< Section > section )
+   void Pipeline::add_sink( std::unique_ptr< Section > &&section )
    {
 
    }
