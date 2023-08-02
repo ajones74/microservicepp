@@ -30,14 +30,7 @@ namespace mspp {
          // std::string.
          virtual std::string pull( );
 
-         virtual void add_source( std::unique_ptr< Section > &&section );
-
-         virtual void add_section( std::unique_ptr< Section > &&section );
-
-         virtual void add_sink( std::unique_ptr< Section > &&section );
-
       private:
-
 
    };
 }

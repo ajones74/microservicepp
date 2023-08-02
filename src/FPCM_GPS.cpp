@@ -10,63 +10,11 @@
 #include <Service.hpp>
 #include <Section.hpp>
 
+#include <GPS_service.hpp>
+
 #include <Logging_service_pipelines.hpp>
 #include <Configuration_service_pipelines.hpp>
 #include <GPS_service_pipelines.hpp>
-
-#include <Serial_port_section.hpp>
-#include <NMEA_0183_filters_section.hpp>
-#include <Push_port_section.hpp>
-
-
-/* 
-{
-  	"service": "GPS",
-  	"config": {
-  		"logging": 3,
-  		"start": "WAITING"
-  	},
-  	"pipelines": [{
-  			"pipeline": "from:",
-  			"sections": [{
-  					"pump": "serial?device=/dev/ttymxc4,baud=115200,parity=none,databits=8,stopbits=1,flow=none"
-  				},
-  				{
-  					"frame": "NMEA 0183"
-  				},
-  				{
-  					"filter": "NMEA 0138?ALLOW=$GPGGA,ALLOW=$GPMRC"
-  				},
-  				{
-  					"decimate": 1.00
-  				}
-  			]
-  		},
-  		{
-  			"pipeline": "from:",
-  			"sections": [{
-  					"pump": "serial?device=/dev/ttymxc4,baud=115200,parity=none,databits=8,stopbits=1,flow=none"
-  				},
-  				{
-  					"frame": "NMEA 0183"
-  				},
-  				{
-  					"pool": "file?file=/opt/tm/logging/gps.txt"
-  				}
-  			]
-  		},
-      {
-         "pipeline": "to:",
-         "sections" : [ {
-               "pool": "nng?
-            }
-         ]
-      }
-  	]
-}
-*/
-
-
 
 
 // NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
@@ -91,48 +39,43 @@ int main(int argc, const char **argv)
       using namespace mspp;
       using json = nlohmann::json;
 
+      //
+      //  Create a pipeline to the logging service
+      //
       std::unique_ptr< Pipeline > logging_service_pipe = 
          std::make_unique< Logging_service_client_pipe>( our_service_name );
       // Throws an exception on failure to connect.
       logging_service_pipe->connect();
 
+      //
+      //  Create a pipeline to the configruation service
+      //
       std::unique_ptr< Pipeline > configuration_service_pipe = 
          std::make_unique< Configuration_service_client_pipe >( our_service_name );
       // Throws an exception on failure to connect.
       configuration_service_pipe->connect();
-
       // Pull a copy of the system-wide configuration from the 
       // configuration service as a JSON-structured document.
       json config_json = configuration_service_pipe->pull( "format=JSON" );
 
-      // Data source
-      std::unique_ptr< Section > serial_port_section  = 
-         std::make_unique< Serial_port_section >("ttymxc4?baud=115200&flow=none");
-      // Data filter, 1 of 1
-      std::unique_ptr< Section > gps_frame_section = 
-         std::make_unique< NMEA_0183_Framer_section >( " " );
-      // Data sink
-      std::unique_ptr< Section > push_port_section =
-         std::make_unique< Push_port_section >( " " );
+      //
+      //  Create our own, service-specific pipeline
+      //
+      std::unique_ptr< Pipeline > our_data_pipe = 
+         std::make_unique< GPS_service_data_pipe >( our_service_name );
+      // Throws an exception on failure to connect.
+      our_data_pipe->connect();
 
-      // Create a serial-port data pipeline specific to our service.
-      // The ctor argument is any descriptive text string -- it's not 
-      // parsed or used for anything other than a label.
-      std::unique_ptr< Pipeline > our_service_pipe = 
-         std::make_unique< GPS_service_data_pipe >( "GPS/Serial/ttymxc0" );
-      // Add the newly-minted sections created just above to our Pipeline.
-      our_service_pipe->add_source( std::move( serial_port_section ) );
-      our_service_pipe->add_section( std::move( gps_frame_section ) );
-      our_service_pipe->add_sink( std::move( push_port_section ) );
-
-      // Create our local GPS service...
+      //
+      //  Create our local GPS service
+      //
       std::unique_ptr< Service > GPS_service = 
-         std::make_unique< Service >( our_service_name );
+         std::make_unique< GPS_Service >( our_service_name );
 
-      // Add Logging pipe, configuration pipe, and the data-pipe to the service.
+      // Add logging pipe, configuration pipe, and data-pipe to the service.
       GPS_service->add( std::move( logging_service_pipe ) );
       GPS_service->add( std::move( configuration_service_pipe ) );
-      GPS_service->add( std::move( our_service_pipe ) );
+      GPS_service->add( std::move( our_data_pipe ) );
 
       // This calls the .start() methods (if applicable) for all 
       // associated pipes.

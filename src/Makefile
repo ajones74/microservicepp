@@ -8,15 +8,17 @@ COMMON_SRCS := \
 		  ../base_classes/src/Section.cpp
 
 
-GPS_SRCS := GPS_Service.cpp \
+GPS_SRCS := FPCM_GPS.cpp \
 				../sections/src/Serial_port_section.cpp \
 				../sections/src/Push_port_section.cpp \
 				../sections/src/NMEA_0183_filters_section.cpp \
 				../pipelines/src/Configuration_service_pipelines.cpp \
 				../pipelines/src/Logging_service_pipelines.cpp \
-				../pipelines/src/GPS_service_pipelines.cpp
+				../pipelines/src/GPS_service_pipelines.cpp \
+				../services/src/GPS_service.cpp
 
 CONFIG_SRCS := ../services/src/Configuration_Service.cpp
+
 LOGGING_SRCS := ../services/src/Logging_Service.cpp
 
 LIBPATH := -L../nng/build/
@@ -27,7 +29,8 @@ INCPATH := -I../json/single_include \
          -I../base_classes/include \
 			-I../exceptions/include \
          -I../pipelines/include \
-		   -I../sections/include 
+		   -I../sections/include \
+			-I../services/include
 
 GPS_BIN = gps_service
 LOGGING_BIN = logging_service
@@ -39,15 +42,15 @@ all: $(GPS_BIN)
 
 
 $(GPS_BIN): $(GPS_SRCS) $(COMMON_SRCS)
-	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./gps_service_version.h
+	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
 $(CONFIG_BIN): $(CONFIG_SRCS) $(COMMON_SRCS)
-	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./configuration_service_version.h
+	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
 $(LOGGING_BIN): $(LOGGING_SRCS) $(COMMON_SRCS)
-	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./logging_service_version.h
+	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
 clean:

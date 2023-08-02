@@ -19,7 +19,8 @@ namespace mspp {
 class Pipeline {
    public:
       Pipeline( const std::string &descriptive_string ) :
-         m_descriptive_string{ descriptive_string }
+         m_descriptive_string{ descriptive_string },
+         m_connected{ false }
       { }
 
       virtual void connect( ) = 0;
@@ -45,6 +46,16 @@ class Pipeline {
       // MEMBERS
       // 
       std::string m_descriptive_string;
+      bool m_connected;
+      
+      // There should really ever only be ONE source-section...
+      std::vector< std::unique_ptr< Section> > m_source_sections;
+      // There can be ZERO or more filter/mapper/adapter sections
+      std::vector< std::unique_ptr< Section> > m_filter_sections;
+      // There should really ever only be ONE sink-section...
+      std::vector< std::unique_ptr< Section> > m_sink_sections;
+
+
    private:
 
 };
