@@ -1,7 +1,11 @@
 #ifndef _SERIAL_PORT_SECTION_HPP_
 #define _SERIAL_PORT_SECTION_HPP_ 
 
+#include <string>
+#include <thread>
+
 #include <Section.hpp>
+
 
 namespace mspp {
    class Serial_port_section : public Section 
@@ -17,10 +21,12 @@ namespace mspp {
 
       private:
          int m_port_fd;
-     
+
          bool open_serial_port( );
          bool open_nng_sockets( );
-
+         void close_serial_port( );
+         void close_nng_sockets( );
+         void processing_loop( );
    };
 }
 
