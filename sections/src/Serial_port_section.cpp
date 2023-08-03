@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include <cstring>   // for memset()
+#include <unistd.h>  // for read(), write
+
 #include <mspp_exceptions.hpp>
 #include <Serial_port_section.hpp>
 
@@ -81,17 +84,34 @@ namespace mspp {
 
    void Serial_port_section::processing_loop( )
    {
+      const uint8_t buff_size{ 128 };
+      uint8_t buff[buff_size];
+      uint8_t read_count;
+
+      using namespace std::chrono_literals;  
+
       m_started.store( true );
       while ( true == m_started.load( ) )
       {
+         memset( buff, 0, buff_size );
+         read_count = read( m_port_fd, buff, buff_size );
+         if ( read_count < 0 ) 
+         {
+            // what to do??? for now, simply sleep a bit and retry...
+            std::this_thread::sleep_for(10ms);
+            continue;
+         }
+         if ( read_count == 0 )
+         {
+            // simply retry?
+            continue;
+         }
+
+         
 
       }
-      // a) Shutdown the serial port...
-      // b) Shutdown the NNG sockets...
-      
+      close_serial_port( );
+      close_nng_sockets( );
       m_connected.store( false );
    }
-
-
-
 }
