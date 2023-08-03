@@ -31,6 +31,11 @@ namespace mspp {
          virtual std::string pull( );
 
       private:
+      // Called in the connect() method -- this method
+      // _creates_ the sections and places them in the
+      // "m_sections" container, above...
+      void create_sections();
+
 
    };
 }

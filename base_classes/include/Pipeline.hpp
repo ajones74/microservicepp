@@ -52,11 +52,10 @@ class Pipeline {
       //   * Use "std::vector::begin" iterator!
       // There should really ever only be ONE sink-section...
       //   * Use "std::vector::end" iterator! 
-      std::vector< std::unique_ptr< Section> > m_sections;
+      std::vector< std::unique_ptr< Section > > m_sections;
 
 
    private:
-
 };
 
 }

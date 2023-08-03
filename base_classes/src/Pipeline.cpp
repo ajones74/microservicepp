@@ -12,16 +12,21 @@
 namespace mspp {
 
 
+   // The data SOURCE is always at the beginning of the vector.
    void Pipeline::add_source( std::unique_ptr< Section > &&section )
    {
       m_sections.insert( m_sections.begin(), std::move( section ) );
    }
 
+   // All filters/mappers/transforms/etc are appended after the 
+   // data SOURCE.
    void Pipeline::add_section( std::unique_ptr< Section > &&section )
    {
        m_sections.push_back( std::move(section) );
    }
 
+   // Ensure that the data sink (almost always an NNG Socket) is 
+   // at the END of the vector.
    void Pipeline::add_sink( std::unique_ptr< Section > &&section )
    {
       m_sections.insert( m_sections.end(), std::move( section ) );
