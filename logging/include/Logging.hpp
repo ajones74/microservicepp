@@ -2,11 +2,14 @@
 #define _LOGGING_HPP_ 
 
 #include <iostream>
+#include <string>
+#include <sstream>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/async.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/sinks/stdout_sinks.h>
+#include <spdlog/sinks/rotating_file_sink.h>
 
 
 namespace mspp 
@@ -14,13 +17,31 @@ namespace mspp
    class Logging {
       public:
          Logging( );
+         Logging( const std::string  &logging_file_name );
          ~Logging( );
 
          Logging *instance( );
 
-         void write( const std::string &msg );
-         void write( const char *msg );
-         // std::ostringstream &operator<< ();
+         void debug( const std::string &msg );
+         void debug( const char *msg );
+         
+         void info( const std::string &msg );
+         void info( const char *msg );
+
+         void warn( const std::string &msg );
+         void warn( const char *msg );
+
+         void error( const std::string &msg );
+         void error( const char *msg );
+
+
+         template< typename T >
+         Logging &operator<< ( Logging &rhs, T value )
+         {
+            rhs.m_log_msg << value;
+            return rhs;
+         }
+
 
          void set_log_level( uint8_t level );
          void set_log_level( uint8_t level, uint32_t mask );
@@ -30,10 +51,11 @@ namespace mspp
       private:
          uint8_t m_log_level;
          uint32_t m_log_mask;
+         //spdlog::sinks::rotating_file_sink_mt m_file_logger;
 
          static Logging *m_instance;
-         
 
+         std::stringstream m_log_msg;
    };
 }
 
