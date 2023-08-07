@@ -5,7 +5,8 @@ COMMON_SRCS := \
 		  ../base_classes/src/Port.cpp \
 		  ../base_classes/src/Pipeline.cpp \
 		  ../base_classes/src/Service.cpp \
-		  ../base_classes/src/Section.cpp
+		  ../base_classes/src/Section.cpp \
+		  ../logging/src/Logging.cpp 
 
 
 GPS_SRCS := FPCM_GPS.cpp \
@@ -30,7 +31,9 @@ INCPATH := -I../json/single_include \
 			-I../exceptions/include \
          -I../pipelines/include \
 		   -I../sections/include \
-			-I../services/include
+			-I../services/include \
+			-I../logging/include \
+			-I../spdlog/include 
 
 GPS_BIN = gps_service
 LOGGING_BIN = logging_service

@@ -6,6 +6,11 @@
 
 #include <Section.hpp>
 
+#include <nng/nng.h>
+#include <nng/protocol/pipeline0/pull.h>
+#include <nng/protocol/pipeline0/push.h>
+
+
 
 namespace mspp {
    class Serial_port_section : public Section 
@@ -21,6 +26,8 @@ namespace mspp {
 
       private:
          int m_port_fd;
+         nng_socket m_nng_socket;
+         Logging m_log;
 
          bool open_serial_port( );
          bool open_nng_sockets( );

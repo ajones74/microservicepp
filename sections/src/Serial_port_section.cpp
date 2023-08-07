@@ -74,19 +74,29 @@ namespace mspp {
 
    void Serial_port_section::close_serial_port( )
    {
-
+      if ( m_port_fd > 0 )
+      {
+         ::close( m_port_fd );
+         m_port_fd = -1;
+      }
    }
  
    void Serial_port_section::close_nng_sockets( )
    {
-
+      // TODO: Is this the best test to ensure the socket is
+      //       valid (or open) before closing it?
+      if ( nng_socket_id( m_nng_socket ) > 0 )
+      {
+         nng_close( m_nng_socket );
+      }
    }
 
    void Serial_port_section::processing_loop( )
    {
       const uint8_t buff_size{ 128 };
       uint8_t buff[buff_size];
-      uint8_t read_count;
+      ssize_t read_count;
+      int write_count;
 
       using namespace std::chrono_literals;  
 
@@ -97,18 +107,40 @@ namespace mspp {
          read_count = read( m_port_fd, buff, buff_size );
          if ( read_count < 0 ) 
          {
-            // what to do??? for now, simply sleep a bit and retry...
+            // what to do??? for now, simply log the issue
+            // and sleep a bit and retry...
+#if 0
+            m_log.warn << __FILE__ 
+                       << __FUNCTION 
+                       << " Serial port("
+                       << m_port_name 
+                       << ") is closed?  Errono("
+                       << errno 
+                       << ")";
+#endif 
             std::this_thread::sleep_for(10ms);
             continue;
          }
          if ( read_count == 0 )
          {
-            // simply retry?
+            // Not an error, but there is nothing in the port
+            // read queue. Simply retry after we give up our 
+            // slot in the scheduler.
+            std::this_thread::yield();
             continue;
          }
 
-         
-
+         write_count = nng_send( m_nng_socket, buff, read_count, 0 );
+         if (write_count != 0 )
+         {
+#if 0
+            m_log.warn << __FILE__,
+                       << __FUNCTION__,
+                       << " Error on writing data on socket("
+                       << write_count 
+                       << ")";
+#endif 
+         }
       }
       close_serial_port( );
       close_nng_sockets( );

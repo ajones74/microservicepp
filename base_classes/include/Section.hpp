@@ -7,6 +7,8 @@
 #include <atomic>
 #include <thread>
 
+#include <Logging.hpp>
+
 namespace mspp {
 
    class Section 
@@ -24,6 +26,7 @@ namespace mspp {
       protected:
          std::atomic_bool m_started;
          std::atomic_bool m_connected; 
+         Logging m_log;
 
          std::thread m_thread;
          std::string m_init_string;
