@@ -16,6 +16,9 @@ namespace mspp {
          { }
 
          virtual void connect( );
+      
+         virtual void start( );
+         virtual void stop( );
 
          // Pull a work-item from the end port of the pipeline
          // format/encoding specified in the string:

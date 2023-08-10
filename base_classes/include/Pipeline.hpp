@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <variant>
+#include <atomic>
 
 #include <Section.hpp>
 #include <SLP_Parser.hpp>
@@ -19,11 +20,14 @@ namespace mspp {
 class Pipeline {
    public:
       Pipeline( const std::string &descriptive_string ) :
-         m_descriptive_string{ descriptive_string },
-         m_connected{ false }
-      { }
+         m_descriptive_string{ descriptive_string }
+      {
+         m_connected.store(false);
+      }
 
       virtual void connect( ) = 0;
+      virtual void start( ) = 0;
+      virtual void stop( ) = 0;
       
       // Pull a work-item from the end port of the pipeline
       // format/encoding specified in the string:
@@ -46,14 +50,13 @@ class Pipeline {
       // MEMBERS
       // 
       std::string m_descriptive_string;
-      bool m_connected;
+      std::atomic_bool m_connected;
      
       // There should really ever only be ONE source-section...
       //   * Use "std::vector::begin" iterator!
       // There should really ever only be ONE sink-section...
       //   * Use "std::vector::end" iterator! 
       std::vector< std::unique_ptr< Section > > m_sections;
-
 
    private:
 };
