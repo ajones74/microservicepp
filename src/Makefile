@@ -1,4 +1,4 @@
-CXXFLAGS += -std=c++17 -O2 -Wall 
+CXXFLAGS += -std=c++17 -O2 -Wall
 
 COMMON_SRCS := \
 		  ../exceptions/src/mspp_exceptions.cpp \
@@ -25,15 +25,16 @@ LOGGING_SRCS := ../services/src/Logging_Service.cpp
 LIBPATH := -L../nng/build/
 LIBS := -lstdc++fs -lpthread -lnng
 
-INCPATH := -I../json/single_include \
+INCPATH := \
+				-I../json/single_include \
 			  -I../nng/include/ \
-         -I../base_classes/include \
-			-I../exceptions/include \
-         -I../pipelines/include \
-		   -I../sections/include \
-			-I../services/include \
-			-I../logging/include \
-			-I../spdlog/include 
+        -I../base_classes/include \
+				-I../exceptions/include \
+        -I../pipelines/include \
+		   	-I../sections/include \
+				-I../services/include \
+				-I../logging/include \
+				-I../spdlog/include 
 
 GPS_BIN = gps_service
 LOGGING_BIN = logging_service

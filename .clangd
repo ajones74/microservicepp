@@ -1,0 +1,2 @@
+CompileFlags:
+  Add: ["-ferror-limit=0", "--target=arm-tm-linux-gnueabi", "--sysroot=/opt/tm/2.1.1-rc01-dev/tspv1rb/sysroots/cortexa7t2hf-neon-tm-linux-gnueabi", "-I/opt/tm/2.1.1-rc01-dev/tspv1rb/sysroots/cortexa7t2hf-neon-tm-linux-gnueabi/usr/include/c++/9.2.0/", "-I/opt/tm/2.1.1-rc01-dev/tspv1rb/sysroots/cortexa7t2hf-neon-tm-linux-gnueabi/usr/include/c++/9.2.0/arm-tm-linux-gnueabi"] 
