@@ -11,6 +11,16 @@ namespace mspp {
 
    }
 
+   void Logging_service_client_pipe::start( )
+   {
+
+   }
+
+   void Logging_service_client_pipe::stop( )
+   {
+
+   }
+
    std::string Logging_service_client_pipe::pull( const std::string &format )
    {
       return std::string{ "Unimplemented" };

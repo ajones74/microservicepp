@@ -24,6 +24,17 @@ namespace mspp
       m_connected = true;
    }
 
+   void GPS_service_data_pipe::start( )
+   {
+
+   }
+   
+   void GPS_service_data_pipe::stop( )
+   {
+
+   
+   }
+
    std::string GPS_service_data_pipe::pull( const std::string &format)
    {
       return std::string{ "Unimplemented" };

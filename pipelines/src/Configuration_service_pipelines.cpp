@@ -10,6 +10,16 @@ namespace mspp
 
    }
 
+   void Configuration_service_client_pipe::start( )
+   {
+
+   }
+
+   void Configuration_service_client_pipe::stop( )
+   {
+
+   }
+ 
    std::string Configuration_service_client_pipe::pull( const std::string &format)
    {
       return std::string{ "Unimplemented" };

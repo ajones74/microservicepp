@@ -13,6 +13,8 @@ namespace mspp {
          { }
 
          virtual void connect( );
+         virtual void start( );
+         virtual void stop( );
 
          virtual std::string pull( const std::string &format );
 

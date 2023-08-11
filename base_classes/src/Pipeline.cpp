@@ -7,7 +7,6 @@
 
 #include <mspp_exceptions.hpp>
 #include <Pipeline.hpp>
-#include <SLP_Parser.hpp>
 
 namespace mspp {
 
