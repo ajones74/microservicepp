@@ -31,7 +31,6 @@ namespace mspp {
          std::thread m_thread;
          std::string m_init_string;
          std::map<std::string, std::string> m_init_pairs;
-         
    };
 }
 

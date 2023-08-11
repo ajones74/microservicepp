@@ -9,16 +9,14 @@
 #include <Pipeline.hpp>
 
 namespace mspp {
-
-
-   // The data SOURCE is always at the beginning of the vector.
+   // The pipeline SOURCE is always at the beginning of the vector.
    void Pipeline::add_source( std::unique_ptr< Section > &&section )
    {
       m_sections.insert( m_sections.begin(), std::move( section ) );
    }
 
    // All filters/mappers/transforms/etc are appended after the 
-   // data SOURCE.
+   // pipeline SOURCE.
    void Pipeline::add_section( std::unique_ptr< Section > &&section )
    {
        m_sections.push_back( std::move(section) );

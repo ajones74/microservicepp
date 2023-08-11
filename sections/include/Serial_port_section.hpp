@@ -5,6 +5,7 @@
 #include <thread>
 
 #include <Section.hpp>
+#include <Serial.hpp>
 
 #include <nng/nng.h>
 #include <nng/protocol/pipeline0/pull.h>
@@ -28,6 +29,7 @@ namespace mspp {
          int m_port_fd;
          nng_socket m_nng_socket;
          Logging m_log;
+         Serial m_serial;
 
          bool open_serial_port( );
          bool open_nng_sockets( );
