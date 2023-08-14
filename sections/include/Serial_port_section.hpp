@@ -12,14 +12,14 @@
 #include <nng/protocol/pipeline0/push.h>
 
 
-
 namespace mspp {
    class Serial_port_section : public Section 
    {
       public:
          Serial_port_section( const std::string &init_string ) :
             Section{ init_string }, 
-            m_port_fd{ -1 }
+            m_port_fd{ -1 },
+            m_serial{ std::make_unique<Serial>( init_string ) }
          { }
          virtual void connect( );
          virtual void start( );
@@ -29,7 +29,7 @@ namespace mspp {
          int m_port_fd;
          nng_socket m_nng_socket;
          Logging m_log;
-         Serial m_serial;
+         std::unique_ptr<Serial> m_serial;
 
          bool open_serial_port( );
          bool open_nng_sockets( );
