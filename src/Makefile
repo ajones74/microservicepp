@@ -48,15 +48,15 @@ all: $(GPS_BIN)
 
 
 $(GPS_BIN): $(GPS_SRCS) $(COMMON_SRCS)
-	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
+	@echo 'const char *git_build_details = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
 $(CONFIG_BIN): $(CONFIG_SRCS) $(COMMON_SRCS)
-	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
+	@echo 'const char *git_build_details = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
 $(LOGGING_BIN): $(LOGGING_SRCS) $(COMMON_SRCS)
-	@echo 'const char *bVer = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
+	@echo 'const char *git_build_details = "' `git describe --dirty --always --long` '";' > ./FPCM_version.h
 	$(CXX) $(CXXFLAGS) $(INCPATH) $^ -o $@ $(LIBPATH) $(LIBS)
 
 clean:

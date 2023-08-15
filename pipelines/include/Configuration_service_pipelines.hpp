@@ -21,18 +21,10 @@ namespace mspp {
          virtual void stop( );
 
          virtual std::string pull( const std::string &format);
+         virtual std::vector<std::byte> pull( );
 
-         virtual std::string pull( );
-
-         virtual void add_source( Section &section );
-
-         virtual void add_section( Section &section );
-
-         virtual void add_sink( Section &section );
-
-      private:
-
-
+         virtual bool push( const std::string &format, const std::string payload );
+         virtual bool push( const std::vector<std::byte> &payload );
    };
 }
 #endif // _CONF_SERV_PIPELINE_HPP_ 

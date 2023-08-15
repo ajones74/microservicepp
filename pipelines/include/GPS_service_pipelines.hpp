@@ -16,7 +16,6 @@ namespace mspp {
          { }
 
          virtual void connect( );
-      
          virtual void start( );
          virtual void stop( );
 
@@ -27,12 +26,11 @@ namespace mspp {
          //  "format=XML"
          //  "encode=UTF-8"
          //  "encode=UTF-32", etc.
-         virtual std::string pull( const std::string &format);
+         virtual std::string pull( const std::string &format );
+         virtual std::vector<std::byte> pull( );
 
-         // Like the above function, but returns an unstructured 
-         // std::string.
-         virtual std::string pull( );
-
+         virtual bool push( const std::string &format, const std::string &payload );
+         virtual bool push( const std::vector<std::byte> &payload );
       private:
       // Called in the connect() method -- this method
       // _creates_ the sections and places them in the

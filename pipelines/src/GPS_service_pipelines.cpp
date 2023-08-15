@@ -10,8 +10,9 @@ namespace mspp
 {
    void GPS_service_data_pipe::connect( )
    {
-      if ( m_connected )
+      if ( m_connected.load() == true )
       {
+         // already connected...
          return;
       }
 
@@ -21,18 +22,36 @@ namespace mspp
       {
          m->connect();
       }
-      m_connected = true;
+      m_connected.store( true );
    }
 
    void GPS_service_data_pipe::start( )
    {
+      if ( m_running.load() == true)
+      {
+         // Already started/running.
+         return;
+      }
 
+      for ( const auto &s : m_sections )
+      {
+         s->start( );    
+      }
+      m_running.store( true );
    }
    
    void GPS_service_data_pipe::stop( )
    {
-
-   
+      if ( m_running.load() == false )
+      {
+         // Already stopped...
+         return;
+      }
+      for ( const auto &s : m_sections )
+      {
+         s->stop(); 
+      }
+      m_running.store( false );
    }
 
    std::string GPS_service_data_pipe::pull( const std::string &format)
@@ -40,10 +59,16 @@ namespace mspp
       return std::string{ "Unimplemented" };
    }
 
-   std::string GPS_service_data_pipe::pull( )
+std::vector<std::byte> GPS_service_data_pipe::pull( )
    {
       return std::string{ "Unimplemented" };
    }
+
+   bool GPS_service_data_pipe::push( const std::string &format, const std::string &payload )
+   {
+      return true;
+   }
+
 
    // Throw a std::runtime_error or derived-class exception
    // if something goes sideways here.
@@ -54,7 +79,7 @@ namespace mspp
       // TODO: The init-string should come from a configuration file
       //       or some other configuration source
       std::unique_ptr< Section > serial_port_section  = 
-         std::make_unique< Serial_port_section >("ttymxc4?baud=115200&flow=none");
+         std::make_unique< Serial_port_section >("/dev/ttymxc2");
 
       // Data filter, 1 of 1 
       std::unique_ptr< Section > gps_frame_section = 
@@ -70,7 +95,5 @@ namespace mspp
       add_source( std::move( serial_port_section ) );
       add_section( std::move( gps_frame_section ) );
       add_sink( std::move( push_port_section ) );
-
    }
-
 }

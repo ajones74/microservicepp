@@ -31,6 +31,14 @@ namespace mspp {
          std::thread m_thread;
          std::string m_init_string;
          std::map<std::string, std::string> m_init_pairs;
+
+         // The IPC string (or connection string!) 
+         // for the data SOURCE port. Required.
+         std::string m_source_string;
+         // The IPC string for the data SINK port. Required.
+         std::string m_sink_string;
+         // The IPC string for the "command and control" port.
+         std::string m_control_string;
    };
 }
 

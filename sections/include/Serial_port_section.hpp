@@ -18,7 +18,6 @@ namespace mspp {
       public:
          Serial_port_section( const std::string &init_string ) :
             Section{ init_string }, 
-            m_port_fd{ -1 },
             m_serial{ std::make_unique<Serial>( init_string ) }
          { }
          virtual void connect( );
@@ -26,7 +25,6 @@ namespace mspp {
          virtual void stop( );
 
       private:
-         int m_port_fd;
          nng_socket m_nng_socket;
          Logging m_log;
          std::unique_ptr<Serial> m_serial;

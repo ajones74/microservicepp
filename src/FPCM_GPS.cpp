@@ -21,6 +21,8 @@
 #include <Configuration_service_pipelines.hpp>
 #include <GPS_service_pipelines.hpp>
 
+#include "FPCM_verson.h"
+
 // NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
 //       * The CONFIGURATION SERVICE is the SECOND SERVICE to launch
 //       * The FPCM SERVICE is the THIRD SERVICE to launch.
@@ -41,32 +43,41 @@ int main(int argc, const char **argv)
       using namespace mspp;
       using json = nlohmann::json;
 
-      const std::string our_service_name{"GPS Service" };
-      
+      // The timestamp and IP address of this service will be appended
+      // to this greeting/banner, later.
+      pid_t our_pid = getpid( );
+      std::stringstream greeting;
+      greeting << "HELLO from pid("
+               << static_cast<int>(our_pid)
+               << "), GPS service build details: ("
+               << git_build_details
+               << ")!";
+
+      std::string pid_string{ std::to_string(our_pid) };
+
       //
       //  Create a pipeline to the logging service
       //
       std::unique_ptr< Pipeline > logging_service_pipe = 
-         std::make_unique< Logging_service_client_pipe>( our_service_name );
+         std::make_unique< Logging_service_client_pipe>( pid_string );
       // Throws an exception on failure to connect.
       logging_service_pipe->connect();
+      logging_service_pipe->push( "format=std::string", greeting.str() );
 
       //
       //  Create a pipeline to the configruation service
       //
       std::unique_ptr< Pipeline > configuration_service_pipe = 
-         std::make_unique< Configuration_service_client_pipe >( our_service_name );
+         std::make_unique< Configuration_service_client_pipe >( pid_string );
       // Throws an exception on failure to connect.
       configuration_service_pipe->connect();
-      // Pull a copy of the system-wide configuration from the 
-      // configuration service as a JSON-structured document.
       json config_json = configuration_service_pipe->pull( "format=JSON" );
 
       //
       //  Create our own, service-specific pipeline
       //
       std::unique_ptr< Pipeline > our_data_pipe = 
-         std::make_unique< GPS_service_data_pipe >( our_service_name );
+         std::make_unique< GPS_service_data_pipe >(  pid_string );
       // Throws an exception on failure to connect.
       our_data_pipe->connect();
 
@@ -74,7 +85,7 @@ int main(int argc, const char **argv)
       //  Create our local GPS service
       //
       std::unique_ptr< Service > GPS_service = 
-         std::make_unique< GPS_Service >( our_service_name );
+         std::make_unique< GPS_Service >( pid_string );
 
       // Add logging pipe, configuration pipe, and data-pipe to the service.
       GPS_service->add( std::move( logging_service_pipe ) );

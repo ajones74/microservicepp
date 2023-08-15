@@ -60,28 +60,30 @@ namespace mspp {
 
    bool Serial_port_section::open_serial_port( )
    {
-      bool passed = false;
-
-      
-
-
-      return passed;
+      return m_serial->open( );
    }
  
    bool Serial_port_section::open_nng_sockets( )
    {
-      bool passed = false;
+      int retval{0};
 
-      return passed;
+      // listen and push
+      if( ( retval = nng_push0_open( &m_nng_socket ) ) != 0)
+      {
+         // throw an exception here???
+         return false;
+      }
+      if ( ( retval = nng_listen( m_nng_socket, "ipc string", NULL, 0) ) != 0 )
+      {
+         // throw an exception here???
+         return false;
+      }
+      return true;
    }
 
    void Serial_port_section::close_serial_port( )
    {
-      if ( m_port_fd > 0 )
-      {
-         ::close( m_port_fd );
-         m_port_fd = -1;
-      }
+      m_serial->close( );
    }
  
    void Serial_port_section::close_nng_sockets( )
@@ -96,18 +98,19 @@ namespace mspp {
 
    void Serial_port_section::processing_loop( )
    {
-      const uint8_t buff_size{ 128 };
-      uint8_t buff[buff_size];
       ssize_t read_count;
       int write_count;
+      
+      const size_t buff_size{256};
+      std::vector<uint8_t> buff(buff_size, 0);
 
       using namespace std::chrono_literals;  
 
       m_started.store( true );
       while ( true == m_started.load( ) )
       {
-         memset( buff, 0, buff_size );
-         read_count = read( m_port_fd, buff, buff_size );
+         buff.clear();
+         read_count = m_serial->read( buff );
          if ( read_count < 0 ) 
          {
             // what to do??? for now, simply log the issue
@@ -133,7 +136,7 @@ namespace mspp {
             continue;
          }
 
-         write_count = nng_send( m_nng_socket, buff, read_count, 0 );
+         write_count = nng_send( m_nng_socket, buff.data(), read_count, 0 );
          if (write_count != 0 )
          {
 #if 0
