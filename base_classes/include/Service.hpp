@@ -20,11 +20,11 @@ class Service {
 
       // Invoke the "start()" method for all pipelines. The pipelines are int
       // turn to call the "start()" method for their respective sections.
-      virtual void start( ) = 0;
+      virtual void start( );
 
       // By default, this is a simple "while() loop" function that responds
       // to polls from the surveyor pattern in the discovery-agent process.
-      virtual void run( ) = 0;
+      virtual void run( );
 
    private:
       std::string m_service_name;
