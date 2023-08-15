@@ -23,7 +23,7 @@ namespace mspp {
          virtual std::string pull( const std::string &format);
          virtual std::vector<std::byte> pull( );
 
-         virtual bool push( const std::string &format, const std::string payload );
+         virtual bool push( const std::string &format, const std::string &payload );
          virtual bool push( const std::vector<std::byte> &payload );
    };
 }

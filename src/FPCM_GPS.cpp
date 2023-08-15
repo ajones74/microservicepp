@@ -21,7 +21,7 @@
 #include <Configuration_service_pipelines.hpp>
 #include <GPS_service_pipelines.hpp>
 
-#include "FPCM_verson.h"
+#include "FPCM_version.h"
 
 // NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
 //       * The CONFIGURATION SERVICE is the SECOND SERVICE to launch

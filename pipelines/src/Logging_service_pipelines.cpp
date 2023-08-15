@@ -1,7 +1,10 @@
+#include <algorithm>
 #include <iostream>
 
 
 #include <Logging_service_pipelines.hpp>
+#include <iterator>
+#include <string>
 
 
 namespace mspp {
@@ -26,23 +29,24 @@ namespace mspp {
       return std::string{ "Unimplemented" };
    }
 
-   std::string Logging_service_client_pipe::pull( )
+   std::vector<std::byte> Logging_service_client_pipe::pull( )
    {
-      return std::string{ "Unimplemented" };
+      std::string foo = "Unimplemented";
+
+      std::vector<std::byte> bar;
+      bar.reserve( foo.size() );
+  
+      std::transform( foo.begin(), foo.end(), std::back_inserter(bar), []( const char c) { return std::byte(c); } );
+      return bar;
    }
 
-   void Logging_service_client_pipe::add_source( Section &section )
+   bool Logging_service_client_pipe::push( const std::string &format, const std::string &payload )
    {
-
+      return true;
    }
-
-   void Logging_service_client_pipe::add_section( Section &section )
+   
+   bool Logging_service_client_pipe::push( const std::vector<std::byte> &payload )
    {
-
-   }
-
-   void Logging_service_client_pipe::add_sink( Section &section )
-   {
-
+      return true;
    }
 }

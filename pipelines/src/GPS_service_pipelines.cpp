@@ -5,6 +5,7 @@
 #include <Serial_port_section.hpp>
 #include <NMEA_0183_filters_section.hpp>
 #include <Push_port_section.hpp>
+#include <iterator>
 
 namespace mspp 
 {
@@ -59,15 +60,27 @@ namespace mspp
       return std::string{ "Unimplemented" };
    }
 
-std::vector<std::byte> GPS_service_data_pipe::pull( )
+   std::vector<std::byte> GPS_service_data_pipe::pull( )
    {
-      return std::string{ "Unimplemented" };
+      std::string foo = "Unimplemented";
+      std::vector<std::byte> bar;
+
+      bar.reserve( foo.size() );
+      std::transform(foo.begin(), foo.end(), std::back_inserter(bar), []( char c) { return std::byte(c); });
+
+      return bar;
    }
 
    bool GPS_service_data_pipe::push( const std::string &format, const std::string &payload )
    {
       return true;
    }
+
+   bool GPS_service_data_pipe::push(  const std::vector<std::byte> &payload )
+   {
+      return true;
+   }
+
 
 
    // Throw a std::runtime_error or derived-class exception

@@ -48,7 +48,7 @@ class Pipeline {
       //  "format=XML"
       //  "encode=UTF-8"
       //  "encode=UTF-32", etc.
-      virtual bool push( const std::string &format, const std::string payload ) = 0;
+      virtual bool push( const std::string &format, const std::string &payload ) = 0;
 
       // This is useful for pushing binary messages -- msgpack,
       //  Google Protocol Buffers, Google FlatBuffers, 
