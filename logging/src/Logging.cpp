@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 
 #include <Logging.hpp>
@@ -7,6 +8,8 @@
 namespace mspp 
 {
    Logging *Logging::m_instance = nullptr;
+   std::string Logging::m_logfile_name{"/tmp/logging.out"};
+   std::chrono::steady_clock::time_point Logging::m_start_time = std::chrono::steady_clock::now(); 
 
    Logging::Logging( ) 
    {
@@ -23,14 +26,6 @@ namespace mspp
       openlog( (const char *)0,
                LOG_CONS | LOG_PID, // Log to CONSOLE on syslogd error, include PID
                LOG_USER );
-
-#if 0
-      // BONUS: file-rotating logger with 5MB size (max) and 3 rotated files.
-      m_file_logger = spdlog::rotating_logger_mt( "file_logger",
-            logging_file_name,     // logging filename
-            1024*1024*5,           // 5 MB max filesize
-            3 );                   // 3-deep queue of rotated files.
-#endif 
 
    }
 
@@ -50,12 +45,13 @@ namespace mspp
       closelog( );
    }
 
-   Logging *Logging::instance( )
+   Logging *Logging::get( )
    {
       if ( m_instance == nullptr )
       {
-         m_instance = new Logging( "/tmp/fpcm_logging.txt"  );
-      }
+         m_instance = new Logging( m_logfile_name );
+         m_start_time = std::chrono::steady_clock::now();
+      }  
       return m_instance;
    }
 

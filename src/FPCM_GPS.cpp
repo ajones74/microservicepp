@@ -69,7 +69,6 @@ int main(int argc, const char **argv)
       //
       std::unique_ptr< Pipeline > configuration_service_pipe = 
          std::make_unique< Configuration_service_client_pipe >( pid_string );
-      // Throws an exception on failure to connect.
       configuration_service_pipe->connect();
       json config_json = configuration_service_pipe->pull( "format=JSON" );
 
@@ -78,7 +77,6 @@ int main(int argc, const char **argv)
       //
       std::unique_ptr< Pipeline > our_data_pipe = 
          std::make_unique< GPS_service_data_pipe >(  pid_string );
-      // Throws an exception on failure to connect.
       our_data_pipe->connect();
 
       //
