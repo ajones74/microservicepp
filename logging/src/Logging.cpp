@@ -45,13 +45,17 @@ namespace mspp
       closelog( );
    }
 
-   Logging *Logging::get( )
+   Logging *Logging::instance( )
    {
-      if ( m_instance == nullptr )
+      if ( m_instance )
       {
-         m_instance = new Logging( m_logfile_name );
-         m_start_time = std::chrono::steady_clock::now();
-      }  
+         return m_instance;
+      }
+
+      // Else, we gotta lot of work to do! 
+      m_start_time = std::chrono::steady_clock::now();
+      
+      m_instance = new Logging( m_logfile_name );
       return m_instance;
    }
 

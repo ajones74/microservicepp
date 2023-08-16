@@ -19,7 +19,7 @@ namespace mspp {
          Logging(const std::string &logging_file_name);
          ~Logging();
 
-         static Logging *get();
+         static Logging *instance();
 
          void debug(const std::string &msg);
          void debug(const char *msg);

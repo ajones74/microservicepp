@@ -13,6 +13,7 @@
 //  Tampa Microwave proprietary header files.
 //
 #include <mspp_exceptions.hpp>
+#include <Logging.hpp>
 #include <Pipeline.hpp>
 #include <Service.hpp>
 #include <Section.hpp>
@@ -55,6 +56,19 @@ int main(int argc, const char **argv)
 
       std::string pid_string{ std::to_string(our_pid) };
 
+      Logging *log = Logging::instance();
+
+      //log->connect( );
+      //log->info( greeting.str() );
+
+
+      //Configuration *config = Configuration::instance();
+      
+      //config->connect( );
+      //json config_json = config->pull( "format=JSON" );
+
+
+      #if 0
       //
       //  Create a pipeline to the logging service
       //
@@ -64,6 +78,7 @@ int main(int argc, const char **argv)
       logging_service_pipe->connect();
       logging_service_pipe->push( "format=std::string", greeting.str() );
 
+
       //
       //  Create a pipeline to the configruation service
       //
@@ -71,6 +86,7 @@ int main(int argc, const char **argv)
          std::make_unique< Configuration_service_client_pipe >( pid_string );
       configuration_service_pipe->connect();
       json config_json = configuration_service_pipe->pull( "format=JSON" );
+      #endif 
 
       //
       //  Create our own, service-specific pipeline
@@ -86,8 +102,8 @@ int main(int argc, const char **argv)
          std::make_unique< GPS_Service >( pid_string );
 
       // Add logging pipe, configuration pipe, and data-pipe to the service.
-      GPS_service->add( std::move( logging_service_pipe ) );
-      GPS_service->add( std::move( configuration_service_pipe ) );
+//      GPS_service->add( std::move( logging_service_pipe ) );
+//      GPS_service->add( std::move( configuration_service_pipe ) );
       GPS_service->add( std::move( our_data_pipe ) );
 
       // This calls the .start() methods (if applicable) for all 
