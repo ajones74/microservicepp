@@ -2,11 +2,11 @@ CXXFLAGS += -std=c++17 -O2 -Wall
 
 COMMON_SRCS := \
 	../exceptions/src/mspp_exceptions.cpp \
-	../base_classes/src/Port.cpp \
 	../base_classes/src/Pipeline.cpp \
 	../base_classes/src/Service.cpp \
 	../base_classes/src/Section.cpp \
-	../logging/src/Logging.cpp 
+	../base_classes/src/Agent.cpp \
+	../agents/src/Logging.cpp 
 
 
 GPS_SRCS := FPCM_GPS.cpp \
@@ -35,7 +35,7 @@ INCPATH := \
 	-I../pipelines/include \
 	-I../sections/include \
 	-I../services/include \
-	-I../logging/include \
+	-I../agents/include \
 	-I../spdlog/include 
 
 GPS_BIN = gps_service

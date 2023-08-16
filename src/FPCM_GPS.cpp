@@ -58,14 +58,14 @@ int main(int argc, const char **argv)
 
       Logging *log = Logging::instance();
 
-      //log->connect( );
-      //log->info( greeting.str() );
+      log->connect( );
+      log->info( greeting.str() );
 
 
-      //Configuration *config = Configuration::instance();
+//      Configuration *config = Configuration::instance();
       
-      //config->connect( );
-      //json config_json = config->pull( "format=JSON" );
+//      config->connect( );
+//      json config_json = config->pull( "format=JSON" );
 
 
       #if 0
