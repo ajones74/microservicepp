@@ -18,8 +18,6 @@
 #include <Service.hpp>
 #include <Section.hpp>
 #include <GPS_service.hpp>
-#include <Logging_service_pipelines.hpp>
-#include <Configuration_service_pipelines.hpp>
 #include <GPS_service_pipelines.hpp>
 
 #include "FPCM_version.h"
@@ -62,23 +60,13 @@ int main(int argc, const char **argv)
       log->info( greeting.str() );
 
 
-//      Configuration *config = Configuration::instance();
+      //Configuration *config = Configuration::instance();
       
-//      config->connect( );
-//      json config_json = config->pull( "format=JSON" );
+      //config->connect( );
+      //json config_json = config->pull( "format=JSON" );
 
 
       #if 0
-      //
-      //  Create a pipeline to the logging service
-      //
-      std::unique_ptr< Pipeline > logging_service_pipe = 
-         std::make_unique< Logging_service_client_pipe>( pid_string );
-      // Throws an exception on failure to connect.
-      logging_service_pipe->connect();
-      logging_service_pipe->push( "format=std::string", greeting.str() );
-
-
       //
       //  Create a pipeline to the configruation service
       //
