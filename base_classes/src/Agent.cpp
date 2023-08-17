@@ -41,6 +41,11 @@ namespace mspp
       connect();
    }
 
+   bool Agent::link( Agent &push_agent, Agent &pull_agent, const std::string &ipc_link_str )
+   {
+      return true;
+   }
+
    void Agent::stop( )
    {
 

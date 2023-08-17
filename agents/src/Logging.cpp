@@ -1,3 +1,4 @@
+#include "nng/protocol/pipeline0/push.h"
 #include <chrono>
 #include <iostream>
 
@@ -11,7 +12,8 @@ namespace mspp
    std::string Logging::m_logfile_name{"/tmp/logging.out"};
    std::chrono::steady_clock::time_point Logging::m_start_time = std::chrono::steady_clock::now(); 
 
-   Logging::Logging( ) 
+   Logging::Logging( ) : 
+      m_connected{false}
    {
       // DEFAULT: Log to syslogd, or whatever systemd uses for system logging.
       openlog( (const char *)0,
@@ -20,7 +22,8 @@ namespace mspp
 
    }
    
-   Logging::Logging( const std::string &logging_file_name ) 
+   Logging::Logging( const std::string &logging_file_name ) :
+      m_connected{false}
    {
       // DEFAULT: Log to syslogd, or whatever systemd uses for system logging.
       openlog( (const char *)0,
@@ -36,12 +39,16 @@ namespace mspp
          return;
       }
 
-      // TODO: Cleanup/release/delete any allocated resources.
       delete m_instance;
-
       m_instance = nullptr;
       // Close socket to syslogd.
       closelog( );
+
+      if (m_connected)
+      {
+         nng_close( m_nng_logging_sock );
+         m_connected = false;
+      }  
    }
 
    Logging *Logging::instance( )
@@ -64,7 +71,23 @@ namespace mspp
    //
    void Logging::connect( )
    {
+      int retval = 0;
 
+      if (m_connected)
+      {
+         return;
+      }
+      if ( (retval = nng_push0_open(&m_nng_logging_sock)) != 0)
+      {
+         // TODO: Log the err-msg to syslog with retval value
+         return;
+      }
+      if ( (retval = nng_dial( m_nng_logging_sock, m_ipc_link_string, NULL, 0)) != 0)
+      {
+         // TODO: Log the err-msg to syslog with retval value
+         return;
+      }
+      m_connected = true;      
    }
 
 

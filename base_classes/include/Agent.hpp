@@ -9,7 +9,6 @@ namespace mspp
 {
    class Agent {
       public:
-         Agent( ) = delete;
          Agent( const std::string &init_str ) :
             m_init_string{init_str}
          { }
@@ -21,7 +20,15 @@ namespace mspp
          // Every derived class needs to "connect()"
          virtual void connect( ); 
          virtual void connect( const std::string &init_string );
-        
+      
+         // This will "link" the PUSH side of an agent to the PULL side of an 
+         // agent via an IPC string, something like:
+         //   "ipc:///tmp/agents/gps_serial_to_NMEA_filter.ipc"
+         //
+         // NOTE:
+         // The IPC string is pretty free-form -- constrained only to using a valid
+         // filesystem structure on the computer running this program...
+         virtual bool link ( Agent &push_agent, Agent &pull_agent, const std::string &ipc_link_string );
   
          // On-demand Producer/Consumer agents, like Logging and 
          // Configuration don't have a producer-consumer loop and
@@ -65,6 +72,8 @@ namespace mspp
 
          static Agent *m_instance;
 
+      private:
+         Agent() {}
    };
 }
 #endif  // _AGENT_HPP_
