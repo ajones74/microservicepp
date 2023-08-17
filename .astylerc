@@ -1,0 +1,6 @@
+--style=otbs
+--indent=spaces=3
+--indent-switches
+--add-brackets
+--pad-paren-in
+--convert-tabs

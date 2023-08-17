@@ -4,7 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <string> 
+#include <string>
 #include <variant>
 //
 // 3rd-party header files
@@ -19,7 +19,6 @@
 #include <Pipeline.hpp>
 #include <Service.hpp>
 #include <Section.hpp>
-#include <GPS_service.hpp>
 #include <GPS_service_pipelines.hpp>
 
 #include "FPCM_version.h"
@@ -28,19 +27,18 @@
 //       * The CONFIGURATION SERVICE is the SECOND SERVICE to launch
 //       * The FPCM SERVICE is the THIRD SERVICE to launch.
 //       ** The FPCM SERVICE uses its discovery service in conjunction
-//          with the configuration file fetched from the configuration 
+//          with the configuration file fetched from the configuration
 //          service to launch other services such as:
 //
 //          * GPS Service
 //          * IMU Service
 //          * RFM Service, etc.
-// 
-int main(int argc, const char **argv) 
+//
+int main( int argc, const char **argv )
 {
    int exit_value = EXIT_SUCCESS;
 
-   try 
-   {
+   try {
       using namespace mspp;
       using json = nlohmann::json;
 
@@ -49,7 +47,7 @@ int main(int argc, const char **argv)
       pid_t our_pid = getpid( );
       std::stringstream greeting;
       greeting << "HELLO from pid("
-               << static_cast<int>(our_pid)
+               << static_cast<int>( our_pid )
                << "), GPS service build details: ("
                << git_build_details
                << "), TIME: ("
@@ -57,7 +55,7 @@ int main(int argc, const char **argv)
                << "), DATE: ("
                << __DATE__ << ")";
 
-      std::string pid_string{ std::to_string(our_pid) };
+      std::string pid_string{ std::to_string( our_pid ) };
 
       //
       // Create our logging Agent -- it connects to the logging service
@@ -74,20 +72,20 @@ int main(int argc, const char **argv)
       json config_json = config->pull( "format=JSON" );
 
 
-      // 
+      //
       // Create our GPS service -- it allows for GPS agents to connect to uses
       //
-      // 
+      //
       GPS *gps = GPS::instance( );
       // GPS Agents will connect() to this IPC endpoint:
       //   This endpoint is a listen/push interface.
-      gps->bind( "ipc:///tmp/GPS_data.ipc");
-      
-     
+      gps->bind( "ipc:///tmp/GPS_data.ipc" );
+
+
       //  The stuff I implement below will eventually get migrated into a Dispatcher object:
       //  * It will instantiate its own Logging instance
       //  * It will instantiate its own Configuration instance
-      //  ** There should be some async "notify" mechanism FROM the Configuration service 
+      //  ** There should be some async "notify" mechanism FROM the Configuration service
       //     to our dispatcher in the event of a configuration update....
       //  * It will invoke the "start()" and "stop()" messages of the Service instance (in this case, the "GPS" service)
       //  * It will send a periodic status message to the Logging server via our Logging Agent.
@@ -95,13 +93,13 @@ int main(int argc, const char **argv)
       // std::unique_ptr< Dispatcher > dispatcher = std::make_unique< Dispatcher >( );
 
       // Questions / Considerations for the dispatcher:
-      // * 
+      // *
       dispatcher->dispatch( )
 
- 
-      
-      
- 
+
+
+
+
 
 
 
@@ -111,14 +109,14 @@ int main(int argc, const char **argv)
       //
       //  Create our own, service-specific pipeline
       //
-      std::unique_ptr< Pipeline > our_data_pipe = 
+      std::unique_ptr< Pipeline > our_data_pipe =
          std::make_unique< GPS_service_data_pipe >(  pid_string );
       our_data_pipe->connect();
 
       //
       //  Create our local GPS service
       //
-      std::unique_ptr< Service > GPS_service = 
+      std::unique_ptr< Service > GPS_service =
          std::make_unique< GPS_Service >( pid_string );
 
       // Add logging pipe, configuration pipe, and data-pipe to the service.
@@ -126,35 +124,27 @@ int main(int argc, const char **argv)
 //      GPS_service->add( std::move( configuration_service_pipe ) );
       GPS_service->add( std::move( our_data_pipe ) );
 
-      // This calls the .start() methods (if applicable) for all 
+      // This calls the .start() methods (if applicable) for all
       // associated pipes.
       GPS_service->start( );
 
-      // This function never returns unless SIGKILL/SIGTERM/SIGABRT recv'd      
+      // This function never returns unless SIGKILL/SIGTERM/SIGABRT recv'd
       GPS_service->run( );
-#endif 
+#endif
 
-   } 
-   catch ( const mspp::mspp_startup_exception &e ) 
-   {
+   } catch ( const mspp::mspp_startup_exception &e ) {
       std::cout << "STARTUP ERROR(" << e.what() << ")" << std::endl;
       exit_value = EXIT_FAILURE;
-   } 
-   catch ( const std::runtime_error &e ) 
-   {
+   } catch ( const std::runtime_error &e ) {
       std::cout << "RUNTIME ERROR(" << e.what() << ")" << std::endl;
       exit_value = EXIT_FAILURE;
-   } 
-   catch ( const std::logic_error &e ) 
-   {
+   } catch ( const std::logic_error &e ) {
       std::cout << "LOGIC ERROR(" << e.what() << ")" << std::endl;
       exit_value = EXIT_FAILURE;
-   }
-   catch ( ... )
-   {
+   } catch ( ... ) {
       std::cout << "UNHANDLED ERROR(" <<  ")" << std::endl;
       exit_value = EXIT_FAILURE;
    }
    std::cout << "EXITING" << std::endl;
-   return exit_value; 
+   return exit_value;
 }
