@@ -2,6 +2,7 @@
 //  C++-17 header files
 //
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <string> 
 #include <variant>
@@ -58,18 +59,55 @@ int main(int argc, const char **argv)
 
       std::string pid_string{ std::to_string(our_pid) };
 
+      //
+      // Create our logging Agent -- it connects to the logging service
+      //
       Logging *log = Logging::instance();
-
       log->connect( );
       log->info( greeting.str() );
 
-
+      //
+      // Create our configuration Agent -- it connects to the Configuration service
+      //
       Configuration *config = Configuration::instance();
-      
       config->connect( );
       json config_json = config->pull( "format=JSON" );
 
 
+      // 
+      // Create our GPS service -- it allows for GPS agents to connect to uses
+      //
+      // 
+      GPS *gps = GPS::instance( );
+      // GPS Agents will connect() to this IPC endpoint:
+      //   This endpoint is a listen/push interface.
+      gps->bind( "ipc:///tmp/GPS_data.ipc");
+      
+     
+      //  The stuff I implement below will eventually get migrated into a Dispatcher object:
+      //  * It will instantiate its own Logging instance
+      //  * It will instantiate its own Configuration instance
+      //  ** There should be some async "notify" mechanism FROM the Configuration service 
+      //     to our dispatcher in the event of a configuration update....
+      //  * It will invoke the "start()" and "stop()" messages of the Service instance (in this case, the "GPS" service)
+      //  * It will send a periodic status message to the Logging server via our Logging Agent.
+      //
+      // std::unique_ptr< Dispatcher > dispatcher = std::make_unique< Dispatcher >( );
+
+      // Questions / Considerations for the dispatcher:
+      // * 
+      dispatcher->dispatch( )
+
+ 
+      
+      
+ 
+
+
+
+
+
+#if 0
       //
       //  Create our own, service-specific pipeline
       //
@@ -94,6 +132,8 @@ int main(int argc, const char **argv)
 
       // This function never returns unless SIGKILL/SIGTERM/SIGABRT recv'd      
       GPS_service->run( );
+#endif 
+
    } 
    catch ( const mspp::mspp_startup_exception &e ) 
    {

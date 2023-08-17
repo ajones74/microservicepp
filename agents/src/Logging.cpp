@@ -79,7 +79,7 @@ namespace mspp
       {
          return;
       }
-      if ( (retval = nng_push0_open( &m_nng_logging_sock ) ) != 0 )
+      if ( (retval = nng_push0_open(&m_nng_logging_sock)) != 0)
       {
          syslog( LOG_ERR, "%s:%s: error on open(%s)", __FILE__, __FUNCTION__, nng_strerror(retval) );
          return;
