@@ -18,6 +18,7 @@
 namespace mspp {
    class Logging {
       public:
+         // TODO: Consider delete'ing this default ctor...
          Logging();
          Logging(const std::string &logging_file_name);
          virtual ~Logging();
@@ -49,6 +50,7 @@ namespace mspp {
          // spdlog::sinks::rotating_file_sink_mt m_file_logger;
          std::string m_ipc_link_string;
          nng_socket m_nng_logging_sock;
+         // TODO: THIS *must* become "std::atomic_bool"
          bool m_connected;
 
          static Logging *m_instance;

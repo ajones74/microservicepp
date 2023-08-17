@@ -6,7 +6,8 @@ COMMON_SRCS := \
 	../base_classes/src/Service.cpp \
 	../base_classes/src/Section.cpp \
 	../base_classes/src/Agent.cpp \
-	../agents/src/Logging.cpp 
+	../agents/src/Logging.cpp \
+	../agents/src/Configuration.cpp 
 
 
 GPS_SRCS := FPCM_GPS.cpp \

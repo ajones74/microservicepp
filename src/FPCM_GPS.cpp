@@ -14,6 +14,7 @@
 //
 #include <mspp_exceptions.hpp>
 #include <Logging.hpp>
+#include <Configuration.hpp>
 #include <Pipeline.hpp>
 #include <Service.hpp>
 #include <Section.hpp>
@@ -50,7 +51,10 @@ int main(int argc, const char **argv)
                << static_cast<int>(our_pid)
                << "), GPS service build details: ("
                << git_build_details
-               << ")!";
+               << "), TIME: ("
+               << __TIME__
+               << "), DATE: ("
+               << __DATE__ << ")";
 
       std::string pid_string{ std::to_string(our_pid) };
 
@@ -60,21 +64,11 @@ int main(int argc, const char **argv)
       log->info( greeting.str() );
 
 
-      //Configuration *config = Configuration::instance();
+      Configuration *config = Configuration::instance();
       
-      //config->connect( );
-      //json config_json = config->pull( "format=JSON" );
+      config->connect( );
+      json config_json = config->pull( "format=JSON" );
 
-
-      #if 0
-      //
-      //  Create a pipeline to the configruation service
-      //
-      std::unique_ptr< Pipeline > configuration_service_pipe = 
-         std::make_unique< Configuration_service_client_pipe >( pid_string );
-      configuration_service_pipe->connect();
-      json config_json = configuration_service_pipe->pull( "format=JSON" );
-      #endif 
 
       //
       //  Create our own, service-specific pipeline
