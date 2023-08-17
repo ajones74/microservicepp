@@ -27,16 +27,16 @@ namespace mspp {
          virtual void connect( );
 
          void debug(const std::string &msg);
-         void debug(const char *msg);
+         void debug(const char *msg, size_t len);
 
          void info(const std::string &msg);
-         void info(const char *msg);
+         void info(const char *msg, size_t len);
 
          void warn(const std::string &msg);
-         void warn(const char *msg);
+         void warn(const char *msg, size_t len);
 
          void error(const std::string &msg);
-         void error(const char *msg);
+         void error(const char *msg, size_t len);
 
          void set_log_level(uint8_t level);
          void set_log_level(uint8_t level, uint32_t mask);
@@ -54,6 +54,9 @@ namespace mspp {
          static Logging *m_instance;
          static std::string m_logfile_name;
          static std::chrono::steady_clock::time_point m_start_time;
+
+         bool push( const std::string &msg );
+         bool push( const char *msg, size_t len );
    };
 }  // namespace mspp
 #endif  // _LOGGING_HPP_

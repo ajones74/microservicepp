@@ -1,9 +1,11 @@
+#include "nng/nng.h"
 #include "nng/protocol/pipeline0/push.h"
 #include <chrono>
 #include <iostream>
 
 #include <Logging.hpp>
 
+#include <sys/syslog.h>
 #include <syslog.h>
 
 namespace mspp 
@@ -79,26 +81,49 @@ namespace mspp
       }
       if ( (retval = nng_push0_open(&m_nng_logging_sock)) != 0)
       {
-         // TODO: Log the err-msg to syslog with retval value
+         syslog( LOG_ERR, "%s:%s: error on open(%s)", __FILE__, __FUNCTION__, nng_strerror(retval) );
          return;
       }
-      if ( (retval = nng_dial( m_nng_logging_sock, m_ipc_link_string, NULL, 0)) != 0)
+      if ( (retval = nng_dial( m_nng_logging_sock, m_ipc_link_string.c_str(), NULL, 0) ) != 0 )
       {
-         // TODO: Log the err-msg to syslog with retval value
+         syslog( LOG_ERR, "%s:%s: error on dial(%s)", __FILE__, __FUNCTION__, nng_strerror(retval) );
          return;
       }
       m_connected = true;      
    }
 
 
-   void Logging::debug( const std::string &msg )
+   bool Logging::push( const char *msg, size_t len )
    {
-      syslog( LOG_DEBUG, "%s", msg.c_str( ) ); 
+      int retval;
+      // NOTE: We are sending the message WITHOUT the nul-termination
+      // byte! This might be a nerd trap on the receiver...
+      if ( (retval = nng_send( m_nng_logging_sock, 
+                               (void *)msg, 
+                               len, 
+                               NNG_FLAG_NONBLOCK )) != 0 )
+      {
+         syslog( LOG_WARNING, "Logging::push(): error(%s)", nng_strerror(retval) );
+         return false;
+      }
+      return true;   
    }
 
-   void Logging::debug( const char *msg )
+   bool Logging::push( const std::string &msg )
+   {  
+      return push( msg.c_str(), msg.size() );
+   }
+
+   void Logging::debug( const std::string &msg )
+   {
+      syslog( LOG_DEBUG, "%s", msg.c_str( ) );
+      push( msg );
+   }
+
+   void Logging::debug( const char *msg, size_t len )
    {
       syslog( LOG_DEBUG, "%s", msg ); 
+      push( msg, len );
    }
 
    // 1) Unconditionally (???) log to syslog..
@@ -106,32 +131,38 @@ namespace mspp
    //    created in the .connect() method.   
    void Logging::info( const std::string &msg )
    {
-      syslog( LOG_INFO, "%s", msg.c_str( ) ); 
+      syslog( LOG_INFO, "%s", msg.c_str( ) );
+      push( msg );
    }
 
-   void Logging::info( const char *msg )
+   void Logging::info( const char *msg, size_t len )
    {
-      syslog( LOG_INFO, "%s", msg ); 
+      syslog( LOG_INFO, "%s", msg );
+      push( msg, len );      
    }
 
    void Logging::warn( const std::string &msg )
    {
       syslog( LOG_WARNING, "%s", msg.c_str( ) ); 
+      push( msg );
    }
 
-   void Logging::warn( const char *msg )
+   void Logging::warn( const char *msg, size_t len )
    {
       syslog( LOG_WARNING, "%s", msg ); 
+      push( msg, len );
    }
 
    void Logging::error( const std::string &msg )
    {
       syslog( LOG_ERR, "%s", msg.c_str( ) ); 
+      push( msg );
    }
 
-   void Logging::error( const char *msg )
+   void Logging::error( const char *msg, size_t len )
    {
       syslog( LOG_ERR, "%s", msg ); 
+      push( msg, len );
    }
 
    void Logging::set_log_level( uint8_t level )
