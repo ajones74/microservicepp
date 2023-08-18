@@ -14,8 +14,14 @@
 //  Tampa Microwave proprietary header files.
 //
 #include <mspp_exceptions.hpp>
+
+// Agents 
 #include <Logging.hpp>
 #include <Configuration.hpp>
+
+// services
+#include <GPS.hpp>
+
 #include <Pipeline.hpp>
 #include <Service.hpp>
 #include <Section.hpp>
@@ -85,17 +91,19 @@ int main( int argc, const char **argv )
       //  The stuff I implement below will eventually get migrated into a Dispatcher object:
       //  * It will instantiate its own Logging instance
       //  * It will instantiate its own Configuration instance
-      //  ** There should be some async "notify" mechanism FROM the Configuration service
-      //     to our dispatcher in the event of a configuration update....
       //  * It will invoke the "start()" and "stop()" messages of the Service instance (in this case, the "GPS" service)
       //  * It will send a periodic status message to the Logging server via our Logging Agent.
+      //  * It will listen for incoming messages on "ipc:///tmp/GPS_mgmt.ipc" file:
+      //  ** incoming message can "stop()" the event loop
+      //  ** incoming message can force another "pull()" from the configuration agent.
+      //  ** incoming message can force the instantiaton of another Agent and add it to the event loop.
+      //
       //
       // std::unique_ptr< Dispatcher > dispatcher = std::make_unique< Dispatcher >( );
 
       // Questions / Considerations for the dispatcher:
       // *
-      dispatcher->dispatch( )
-
+      //   dispatcher->dispatch( )
 
 
 

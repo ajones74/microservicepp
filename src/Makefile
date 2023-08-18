@@ -15,7 +15,8 @@ GPS_SRCS := FPCM_GPS.cpp \
 	../sections/src/Push_port_section.cpp \
 	../sections/src/NMEA_0183_filters_section.cpp \
 	../pipelines/src/GPS_service_pipelines.cpp \
-	../library/src/Serial.cpp
+	../library/src/Serial.cpp \
+	../services/src/GPS.cpp
 
 CONFIG_SRCS := ../services/src/Configuration_Service.cpp
 
