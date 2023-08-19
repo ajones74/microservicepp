@@ -7,7 +7,7 @@
 #include <atomic>
 #include <thread>
 
-#include <Logging.hpp>
+#include <Logging_Agent.hpp>
 
 namespace mspp {
 
@@ -15,6 +15,7 @@ namespace mspp {
    {
       public:
          Section( const std::string &init_string ) :
+            m_log{nullptr},
             m_init_string{ init_string }
          { 
             m_started.store( false );
@@ -26,7 +27,7 @@ namespace mspp {
       protected:
          std::atomic_bool m_started;
          std::atomic_bool m_connected; 
-         Logging m_log;
+         Logging *m_log;
 
          std::thread m_thread;
          std::string m_init_string;

@@ -2,19 +2,14 @@ CXXFLAGS += -std=c++17 -O2 -Wall
 
 COMMON_SRCS := \
 	../exceptions/src/mspp_exceptions.cpp \
-	../base_classes/src/Pipeline.cpp \
-	../base_classes/src/Service.cpp \
-	../base_classes/src/Section.cpp \
-	../base_classes/src/Agent.cpp \
-	../agents/src/Logging.cpp \
-	../agents/src/Configuration.cpp 
+	../agents/src/Logging_Agent.cpp \
+	../agents/src/Configuration_Agent.cpp 
 
 
-GPS_SRCS := FPCM_GPS.cpp \
+GPS_SRCS := \
 	../sections/src/Serial_port_section.cpp \
 	../sections/src/Push_port_section.cpp \
 	../sections/src/NMEA_0183_filters_section.cpp \
-	../pipelines/src/GPS_service_pipelines.cpp \
 	../library/src/Serial.cpp \
 	../services/src/GPS.cpp
 
@@ -26,6 +21,7 @@ LIBPATH := -L../nng/build/
 LIBS := -lstdc++fs -lpthread -lnng
 
 INCPATH := \
+	-I. \
 	-I../json/single_include \
 	-I../nng/include/ \
 	-I../base_classes/include \

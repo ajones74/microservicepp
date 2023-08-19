@@ -27,7 +27,7 @@
 #include <Section.hpp>
 #include <GPS_service_pipelines.hpp>
 
-#include "FPCM_version.h"
+#include <FPCM_version.h>
 
 // NOTE: * The LOGGING SERVICE is the VERY FIRST SERVICE to launch.
 //       * The CONFIGURATION SERVICE is the SECOND SERVICE to launch
@@ -78,14 +78,7 @@ int main( int argc, const char **argv )
       json config_json = config->pull( "format=JSON" );
 
 
-      //
-      // Create our GPS service -- it allows for GPS agents to connect to uses
-      //
-      //
-      GPS *gps = GPS::instance( );
-      // GPS Agents will connect() to this IPC endpoint:
-      //   This endpoint is a listen/push interface.
-      gps->bind( "ipc:///tmp/GPS_data.ipc" );
+      //gps->bind( "ipc:///tmp/GPS_data.ipc" );
 
 
       //  The stuff I implement below will eventually get migrated into a Dispatcher object:
@@ -106,6 +99,7 @@ int main( int argc, const char **argv )
       //   dispatcher->dispatch( )
 
 
+      ///////////////////////////////////////////////////////////////////
 
 
 

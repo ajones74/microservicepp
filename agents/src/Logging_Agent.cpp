@@ -3,7 +3,7 @@
 #include <chrono>
 #include <iostream>
 
-#include <Logging.hpp>
+#include <Logging_Agent.hpp>
 
 #include <sys/syslog.h>
 #include <syslog.h>
